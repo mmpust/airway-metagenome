@@ -1,0 +1,501 @@
+Sequences	Score	Value
+A8AWG3.1|LEPA_STRGC|Full=Elongation factor 4|Short	1149	0.0   
+A8AVA8.1|DNAK_STRGC|Full=Chaperone protein DnaK|Al	1084	0.0   
+A8AZE1.1|CH60_STRGC|Full=60 kDa chaperonin|AltName	936	0.0   
+O07631.1|BIPA_BACSU|Full=50S ribosomal subunit asse	918	0.0   
+A7X2Y7.1|LEPA_STAA1|Full=Elongation factor 4|Short	914	0.0   
+Q9Z6H4.2|GUAA_LACLM|Full=GMP synthase [glutamine-hy	829	0.0   
+A7X2Y1.1|DNAK_STAA1|Full=Chaperone protein DnaK|Al	816	0.0   
+O31673.1|CLPE_BACSU|Full=ATP-dependent Clp protease	774	0.0   
+A8AWM9.1|OBG_STRGC|Full=GTPase Obg|Full=G	774	0.0   
+Q8DPV8.1|OBG_STRR6|Full=GTPase Obg|Full=G	773	0.0   
+Q04KK7.1|OBG_STRP2|Full=GTPase Obg|Full=G	773	0.0   
+B2IQ29.1|OBG_STRPS|Full=GTPase Obg|Full=G	772	0.0   
+A3CM33.1|OBG_STRSV|Full=GTPase Obg|Full=G	769	0.0   
+B8ZPS8.1|OBG_STRPJ|Full=GTPase Obg|Full=G	768	0.0   
+Q97QW8.1|OBG_STRPN|Full=GTPase Obg|Full=G	767	0.0   
+B5E4J4.1|OBG_STRP4|Full=GTPase Obg|Full=G	767	0.0   
+B1IBL9.1|OBG_STRPI|Full=GTPase Obg|Full=G	764	0.0   
+A4W0M2.1|OBG_STRS2|Full=GTPase Obg|Full=G	763	0.0   
+A4VUC8.1|OBG_STRSY|Full=GTPase Obg|Full=G	761	0.0   
+Q5LYR4.1|OBG_STRT1|Full=GTPase Obg|Full=G	759	0.0   
+Q5M3C8.1|OBG_STRT2|Full=GTPase Obg|Full=G	759	0.0   
+Q03JJ8.1|OBG_STRTD|Full=GTPase Obg|Full=G	759	0.0   
+P0A5W9.1|RIR1_MYCBO|Full=Ribonucleoside-diphosphate	748	0.0   
+Q8P0I6.1|OBG_STRP8|Full=GTPase Obg|Full=G	735	0.0   
+B5XLZ0.1|OBG_STRPZ|Full=GTPase Obg|Full=G	735	0.0   
+Q5XBM1.1|OBG_STRP6|Full=GTPase Obg|Full=G	734	0.0   
+A7X4J1.1|CH60_STAA1|Full=60 kDa chaperonin|AltName	734	0.0   
+Q8DUU2.1|OBG_STRMU|Full=GTPase Obg|Full=G	734	0.0   
+Q48SX8.1|OBG_STRPM|Full=GTPase Obg|Full=G	734	0.0   
+Q1J652.1|OBG_STRPF|Full=GTPase Obg|Full=G	734	0.0   
+Q1JBB7.1|OBG_STRPB|Full=GTPase Obg|Full=G	732	0.0   
+Q1JLA1.1|OBG_STRPC|Full=GTPase Obg|Full=G	732	0.0   
+A2RE30.1|OBG_STRPG|Full=GTPase Obg|Full=G	732	0.0   
+Q99Z94.1|OBG_STRP1|Full=GTPase Obg|Full=G	731	0.0   
+Q1JGD5.1|OBG_STRPD|Full=GTPase Obg|Full=G	729	0.0   
+P0DB52.1|OBG_STRP3|Full=GTPase Obg|Full=G	728	0.0   
+P0DB53.1|OBG_STRPQ|Full=GTPase Obg|Full=G	728	0.0   
+O34512.2|YFMM_BACSU|Full=Uncharacterized ABC transp	726	0.0   
+C0MBS1.1|OBG_STRE4|Full=GTPase Obg|Full=G	724	0.0   
+B4U3Q7.1|OBG_STREM|Full=GTPase Obg|Full=G	722	0.0   
+C0MDB4.1|OBG_STRS7|Full=GTPase Obg|Full=G	722	0.0   
+Q8DYL0.1|OBG_STRA5|Full=GTPase Obg|Full=G	719	0.0   
+Q8E465.1|OBG_STRA3|Full=GTPase Obg|Full=G	719	0.0   
+Q3K046.1|OBG_STRA1|Full=GTPase Obg|Full=G	719	0.0   
+Q88Z31.1|FTSH_LACPL|Full=ATP-dependent zinc metallo	716	0.0   
+B9DSH7.1|OBG_STRU0|Full=GTPase Obg|Full=G	699	0.0   
+Q8KY50.1|STKP_STREE|Full=Serine/threonine-protein k	697	0.0   
+P0A3B1.1|BIPA_ECOL6|Full=50S ribosomal subunit asse	669	0.0   
+P0A3B3.1|BIPA_ECO57|Full=50S ribosomal subunit asse	669	0.0   
+P0A3B4.1|BIPA_SHIFL|Full=50S ribosomal subunit asse	669	0.0   
+P0DTT0.1|BIPA_ECOLI|Full=50S ribosomal subunit asse	669	0.0   
+H9L427.1|BIPA_SALTY|Full=50S ribosomal subunit asse	664	0.0   
+Q9ZLZ3.1|BIPA_HELPJ|Full=50S ribosomal subunit asse	651	0.0   
+Q834V4.1|OBG_ENTFA|Full=GTPase Obg|Full=G	637	0.0   
+P56836.2|DNAK_CHLMU|Full=Chaperone protein DnaK|Al	635	0.0   
+Q00768.3|CH602_STRAL|Full=60 kDa chaperonin 2|AltN	622	0.0   
+P37251.4|ILVB_BACSU|Full=Acetolactate synthase larg	620	0.0   
+P9WPC8.1|CLPC1_MYCTO|Full=ATP-dependent Clp proteas	614	0.0   
+Q00767.3|CH601_STRAL|Full=60 kDa chaperonin 1|AltN	611	0.0   
+Q9CF94.1|OBG_LACLA|Full=GTPase Obg|Full=G	608	0.0   
+P0A521.2|CH602_MYCBO|Full=60 kDa chaperonin 2|AltN	608	0.0   
+O33963.1|CH60_BARHE|Full=60 kDa chaperonin|AltName	605	0.0   
+A2RJQ6.1|OBG_LACLM|Full=GTPase Obg|Full=G	605	0.0   
+Q02XY2.1|OBG_LACLS|Full=GTPase Obg|Full=G	604	0.0   
+P95830.2|DNAJ_STRPN|Full=Chaperone protein DnaJ	602	0.0   
+Q8CWT2.1|DNAJ_STRR6|Full=Chaperone protein DnaJ	598	0.0   
+P42383.2|CH60_HELPY|Full=60 kDa chaperonin|AltName	596	0.0   
+O33964.1|CH60_BARQU|Full=60 kDa chaperonin|AltName	596	0.0   
+Q1WT46.1|OBG_LACS1|Full=GTPase Obg|Full=G	593	0.0   
+Q8DWH2.1|DNAJ_STRMU|Full=Chaperone protein DnaJ	592	0.0   
+A0AIY6.1|OBG_LISW6|Full=GTPase Obg|Full=G	591	0.0   
+B8DHL1.1|OBG_LISMH|Full=GTPase Obg|Full=G	590	0.0   
+Q8Y6Z3.1|OBG_LISMO|Full=GTPase Obg|Full=G	589	0.0   
+Q71ZD3.1|OBG_LISMF|Full=GTPase Obg|Full=G	589	0.0   
+Q5M1T7.1|DNAJ_STRT1|Full=Chaperone protein DnaJ	588	0.0   
+Q5M6D0.1|DNAJ_STRT2|Full=Chaperone protein DnaJ	588	0.0   
+Q92BH7.1|OBG_LISIN|Full=GTPase Obg|Full=G	588	0.0   
+B2SCZ4.1|CH60_BRUA1|Full=60 kDa chaperonin|AltName	587	0.0   
+Q7WVY0.1|CH602_ANASL|Full=60 kDa chaperonin 2|AltN	581	0.0   
+P37476.1|FTSH_BACSU|Full=ATP-dependent zinc metallo	580	0.0   
+Q3K3T1.1|DNAJ_STRA1|Full=Chaperone protein DnaJ	578	0.0   
+Q8E298.1|DNAJ_STRA5|Full=Chaperone protein DnaJ	578	0.0   
+Q8E7Q7.1|DNAJ_STRA3|Full=Chaperone protein DnaJ	577	0.0   
+B1HVB2.2|OBG_LYSSC|Full=GTPase Obg|Full=G	573	0.0   
+Q65GM7.1|OBG_BACLD|Full=GTPase Obg|Full=G	568	0.0   
+B9DVF2.1|DNAJ_STRU0|Full=Chaperone protein DnaJ	563	1e-180
+A7Z781.1|OBG_BACVZ|Full=GTPase Obg|Full=G	563	5e-180
+B7GIR2.1|OBG_ANOFW|Full=GTPase Obg|Full=G	562	1e-179
+Q5XAD7.2|DNAJ_STRP6|Full=Chaperone protein DnaJ	558	4e-179
+Q8NZM7.1|DNAJ_STRP8|Full=Chaperone protein DnaJ	558	4e-179
+P0C0B5.1|DNAJ_STRPY|Full=Chaperone protein DnaJ	558	5e-179
+P0DA70.1|DNAJ_STRP3|Full=Chaperone protein DnaJ	557	1e-178
+P0DA71.1|DNAJ_STRPQ|Full=Chaperone protein DnaJ	557	1e-178
+P0C0B6.1|DNAJ_STRP1|Full=Chaperone protein DnaJ	557	1e-178
+P15599.1|CH601_CHLCV|Full=60 kDa chaperonin 1|AltN	564	2e-178
+Q3KMQ9.3|CH60_CHLTA|Full=60 kDa chaperonin|AltName	563	3e-178
+A8FFS8.1|OBG_BACP2|Full=GTPase Obg|Full=G	556	2e-177
+Q9AMJ8.1|CH601_ANASL|Full=60 kDa chaperonin 1|AltN	558	1e-176
+P20964.1|OBG_BACSU|Full=GTPase Obg|Full=G	552	4e-176
+A8AZN1.1|HSLO_STRGC|Full=33 kDa chaperonin|AltName	546	4e-176
+P0CE48.1|EFTU2_ECOLI|Full=Elongation factor Tu 2|S	548	3e-175
+P0CE47.1|EFTU1_ECOLI|Full=Elongation factor Tu 1|S	548	4e-175
+Q72ZY5.1|OBG_BACC1|Full=GTPase Obg|Full=G	548	1e-174
+Q9KDK0.1|OBG_BACHD|Full=GTPase Obg|Full=G	547	3e-174
+Q5KWP5.1|OBG_GEOKA|Full=GTPase Obg|Full=G	546	7e-174
+B7HQJ8.1|OBG_BACC7|Full=GTPase Obg|Full=G	545	1e-173
+Q817U6.1|OBG_BACCR|Full=GTPase Obg|Full=G	545	2e-173
+Q9LAM9.1|MSRAB_STRGC|Full=Peptide methionine sulfox	539	2e-173
+B7HE73.1|OBG_BACC4|Full=GTPase Obg|Full=G	544	2e-173
+Q03QP2.1|OBG_LACBA|Full=GTPase Obg|Full=G	544	3e-173
+Q81LF0.1|OBG_BACAN|Full=GTPase Obg|Full=G	544	3e-173
+Q9WWG9.1|DNAK_PSESG|Full=Chaperone protein DnaK|Al	553	3e-173
+B7JQ26.1|OBG_BACC0|Full=GTPase Obg|Full=G	544	3e-173
+Q634A3.1|OBG_BACCZ|Full=GTPase Obg|Full=G	544	4e-173
+Q6HD85.1|OBG_BACHK|Full=GTPase Obg|Full=G	544	4e-173
+A0RJ47.1|OBG_BACAH|Full=GTPase Obg|Full=G	544	4e-173
+C1ETN7.1|OBG_BACC3|Full=GTPase Obg|Full=G	544	4e-173
+B9IZ16.1|OBG_BACCQ|Full=GTPase Obg|Full=G	543	4e-173
+A4IRC7.1|OBG_GEOTN|Full=GTPase Obg|Full=G	543	6e-173
+Q38WT4.1|OBG_LACSS|Full=GTPase Obg|Full=G	541	2e-172
+B7IIV2.1|OBG_BACC2|Full=GTPase Obg|Full=G	541	4e-172
+A9VIR5.1|OBG_BACMK|Full=GTPase Obg|Full=G	538	5e-171
+B2GBD0.1|OBG_LACF3|Full=GTPase Obg|Full=G	538	6e-171
+A5VJ99.1|OBG_LACRD|Full=GTPase Obg|Full=G	535	4e-170
+B2G6R9.1|OBG_LACRJ|Full=GTPase Obg|Full=G	535	4e-170
+P9WHG9.1|RELA_MYCTU|Full=Bifunctional (p)ppGpp synt	545	4e-169
+P37572.1|RADA_BACSU|Full=DNA repair protein RadA|A	533	8e-169
+Q88VG4.1|OBG_LACPL|Full=GTPase Obg|Full=G	530	3e-168
+P0AG24.1|SPOT_ECOLI|Full=Bifunctional (p)ppGpp synt	538	6e-167
+P9WMQ0.1|UVRD1_MYCTO|Full=ATP-dependent DNA helicas	535	3e-165
+P9WMQ1.1|UVRD1_MYCTU|Full=ATP-dependent DNA helicas	535	3e-165
+P80858.1|LEUC_BACSU|Full=3-isopropylmalate dehydrat	518	1e-163
+Q5WHS8.1|OBG_BACSK|Full=GTPase Obg|Full=G	515	3e-163
+Q8EPQ0.1|OBG_OCEIH|Full=GTPase Obg|Full=G	512	4e-162
+Q81IT9.2|CSHA_BACCR|Full=DEAD-box ATP-dependent RNA	516	7e-162
+Q8KFZ5.1|GUAA_CHLTE|Full=GMP synthase [glutamine-hy	514	2e-161
+Q02VR5.1|DNAJ_LACLS|Full=Chaperone protein DnaJ	507	4e-161
+A2RP20.1|DNAJ_LACLM|Full=Chaperone protein DnaJ	507	4e-161
+P35514.2|DNAJ_LACLA|Full=Chaperone protein DnaJ	507	5e-161
+B1YJR9.1|OBG_EXIS2|Full=GTPase Obg|Full=G	508	2e-160
+Q7WSY8.2|CLPB_PROFC|Full=Chaperone protein ClpB	523	9e-160
+B9DNE7.1|OBG_STACT|Full=GTPase Obg|Full=G	505	1e-159
+Q93Q66.1|DNAJ_LACLC|Full=Chaperone protein DnaJ	502	2e-159
+Q6G8S5.1|OBG_STAAS|Full=GTPase Obg|Full=G	499	1e-157
+Q7A0Q3.1|OBG_STAAW|Full=GTPase Obg|Full=G	499	1e-157
+Q7A584.1|OBG_STAAN|Full=GTPase Obg|Full=G	499	1e-157
+Q99TK9.1|OBG_STAAM|Full=GTPase Obg|Full=G	499	1e-157
+Q2FXT1.1|OBG_STAA8|Full=GTPase Obg|Full=G	499	1e-157
+Q2FG83.1|OBG_STAA3|Full=GTPase Obg|Full=G	499	1e-157
+A6U2B2.1|OBG_STAA2|Full=GTPase Obg|Full=G	499	1e-157
+A5ITG8.1|OBG_STAA9|Full=GTPase Obg|Full=G	499	1e-157
+A8Z2H2.1|OBG_STAAT|Full=GTPase Obg|Full=G	499	1e-157
+A6QHI6.1|OBG_STAAE|Full=GTPase Obg|Full=G	499	1e-157
+A7X361.1|OBG_STAA1|Full=GTPase Obg|Full=G	499	1e-157
+P71404.2|CLPB_HELPY|Full=Chaperone protein ClpB	516	2e-157
+Q49Y82.1|OBG_STAS1|Full=GTPase Obg|Full=G	498	3e-157
+Q6GG60.1|OBG_STAAR|Full=GTPase Obg|Full=G	498	3e-157
+Q5HFB9.1|OBG_STAAC|Full=GTPase Obg|Full=G	497	8e-157
+Q03F34.1|OBG_PEDPA|Full=GTPase Obg|Full=G	496	2e-156
+Q03YT6.1|OBG_LEUMM|Full=GTPase Obg|Full=G	495	4e-156
+Q4L6Y9.1|OBG_STAHJ|Full=GTPase Obg|Full=G	495	4e-156
+Q5HNQ7.1|OBG_STAEQ|Full=GTPase Obg|Full=G	493	1e-155
+Q8CNZ7.1|OBG_STAES|Full=GTPase Obg|Full=G	493	1e-155
+P0A6H1.2|CLPX_ECOLI|Full=ATP-dependent Clp protease	491	6e-155
+Q2YT86.1|OBG_STAAB|Full=GTPase Obg|Full=G	491	8e-155
+B3WE52.1|OBG_LACCB|Full=GTPase Obg|Full=G	489	5e-154
+Q039J3.1|OBG_LACP3|Full=GTPase Obg|Full=G	488	6e-154
+P0A6P9.2|ENO_ECOLI|Full=Enolase|Full=2-ph	489	6e-154
+P0A519.1|CH601_MYCBO|Full=60 kDa chaperonin 1|AltN	492	1e-153
+B1N057.2|OBG_LEUCK|Full=GTPase Obg|Full=G	480	1e-150
+P0A8N5.2|SYK2_ECOLI|Full=Lysine--tRNA ligase- heat 	481	5e-150
+O34364.1|O16G2_BACSU|Full=Probable oligo-1-6-glucos	482	1e-149
+Q04EZ8.1|OBG_OENOB|Full=GTPase Obg|Full=G	472	4e-148
+C0ZAL7.1|OBG_BREBN|Full=GTPase Obg|Full=G	469	3e-147
+Q74JN7.1|OBG_LACJO|Full=GTPase Obg|Full=G	467	2e-146
+Q21W48.1|GUAA_RHOFT|Full=GMP synthase [glutamine-hy	471	4e-146
+O34952.1|LTAS2_BACSU|Full=Lipoteichoic acid synthas	473	2e-145
+Q043W1.1|OBG_LACGA|Full=GTPase Obg|Full=G	462	7e-145
+A8YV14.1|OBG_LACH4|Full=GTPase Obg|Full=G	461	2e-144
+Q5FKH5.1|OBG_LACAC|Full=GTPase Obg|Full=G	461	2e-144
+Q04B11.1|OBG_LACDB|Full=GTPase Obg|Full=G	459	1e-143
+Q1GAM3.1|OBG_LACDA|Full=GTPase Obg|Full=G	459	2e-143
+O87778.1|DNAJ_LACSK|Full=Chaperone protein DnaJ	452	3e-142
+Q835R5.1|DNAJ_ENTFA|Full=Chaperone protein DnaJ	453	4e-142
+Q38W94.1|DNAJ_LACSS|Full=Chaperone protein DnaJ	452	5e-142
+B8H444.1|FTSH_CAUVN|Full=ATP-dependent zinc metallo	460	3e-141
+Q8DTN6.1|NRNA_STRMU|Full=Probable bifunctional olig	442	9e-140
+Q2FWH5.1|CSHA_STAA8|Full=DEAD-box ATP-dependent RNA	451	1e-139
+P42919.3|RL2_BACSU|Full=50S ribosomal protein L2|S	440	2e-139
+Q03FR6.1|DNAJ_PEDPA|Full=Chaperone protein DnaJ	442	9e-139
+Q93R26.1|DNAJ_TETHA|Full=Chaperone protein DnaJ	441	6e-138
+Q7TXH6.1|LEUC_MYCBO|Full=3-isopropylmalate dehydrat	439	3e-136
+Q88VM1.1|DNAJ_LACPL|Full=Chaperone protein DnaJ	430	3e-134
+P0AG20.1|RELA_ECOLI|Full=GTP pyrophosphokinase|Alt	442	1e-133
+A4J7I9.1|OBG_DESRM|Full=GTPase Obg|Full=G	427	2e-132
+B0TBW1.1|OBG_HELMI|Full=GTPase Obg|Full=G	417	9e-129
+A5D410.1|OBG_PELTS|Full=GTPase Obg|Full=G	416	1e-128
+A8MHK8.1|OBG_ALKOO|Full=GTPase Obg|Full=G	416	2e-128
+Q0AWJ4.1|OBG_SYNWW|Full=GTPase Obg|Full=G	409	2e-126
+B8I179.1|OBG_RUMCH|Full=GTPase Obg|Full=G	409	3e-126
+B1HUD0.1|DNAJ_LYSSC|Full=Chaperone protein DnaJ	405	7e-126
+B3WEQ6.1|DNAJ_LACCB|Full=Chaperone protein DnaJ	405	2e-125
+Q038N5.1|DNAJ_LACP3|Full=Chaperone protein DnaJ	405	2e-125
+B9DNJ9.1|DNAJ_STACT|Full=Chaperone protein DnaJ	404	2e-125
+B8CXZ0.1|OBG_HALOH|Full=GTPase Obg|Full=G	405	9e-125
+Q3AF51.1|OBG_CARHZ|Full=GTPase Obg|Full=G	404	2e-124
+Q8CP18.1|DNAJ_STAES|Full=Chaperone protein DnaJ	399	8e-124
+C5D4U0.1|DNAJ_GEOSW|Full=Chaperone protein DnaJ	400	8e-124
+B1KZR3.1|OBG_CLOBM|Full=GTPase Obg|Full=G	401	1e-123
+A5VJE8.1|DNAJ_LACRD|Full=Chaperone protein DnaJ	399	1e-123
+B2G6W4.1|DNAJ_LACRJ|Full=Chaperone protein DnaJ	399	1e-123
+Q5HNW7.1|DNAJ_STAEQ|Full=Chaperone protein DnaJ	399	1e-123
+A7GHK2.1|OBG_CLOBL|Full=GTPase Obg|Full=G	400	3e-123
+A7FXU6.1|OBG_CLOB1|Full=GTPase Obg|Full=G	400	3e-123
+A5I666.1|OBG_CLOBH|Full=GTPase Obg|Full=G	400	3e-123
+B1ILY5.1|OBG_CLOBK|Full=GTPase Obg|Full=G	400	3e-123
+O69269.1|DNAJ_LYSSH|Full=Chaperone protein DnaJ	397	7e-123
+A4XJS8.2|OBG_CALS8|Full=GTPase Obg|Full=G	399	1e-122
+Q9KWS6.1|DNAJ_PARTM|Full=Chaperone protein DnaJ	396	1e-122
+Q03QU2.1|DNAJ_LACBA|Full=Chaperone protein DnaJ	396	1e-122
+B9MRB8.1|OBG_CALBD|Full=GTPase Obg|Full=G	397	3e-122
+Q49Y21.1|DNAJ_STAS1|Full=Chaperone protein DnaJ	394	6e-122
+A0AIS3.1|DNAJ_LISW6|Full=Chaperone protein DnaJ	394	6e-122
+Q71ZJ8.1|DNAJ_LISMF|Full=Chaperone protein DnaJ	394	1e-121
+C1KVB9.1|DNAJ_LISMC|Full=Chaperone protein DnaJ	394	1e-121
+P63971.1|DNAJ_STAAN|Full=Chaperone protein DnaJ	394	1e-121
+P63972.1|DNAJ_STAAW|Full=Chaperone protein DnaJ	394	1e-121
+P63970.1|DNAJ_STAAM|Full=Chaperone protein DnaJ	394	1e-121
+Q5HFI1.1|DNAJ_STAAC|Full=Chaperone protein DnaJ	394	1e-121
+Q6G8Y8.1|DNAJ_STAAS|Full=Chaperone protein DnaJ	394	1e-121
+Q2FXZ3.1|DNAJ_STAA8|Full=Chaperone protein DnaJ	394	1e-121
+Q2FGE4.1|DNAJ_STAA3|Full=Chaperone protein DnaJ	394	1e-121
+A6U251.1|DNAJ_STAA2|Full=Chaperone protein DnaJ	394	1e-121
+A5ITA7.1|DNAJ_STAA9|Full=Chaperone protein DnaJ	394	1e-121
+A8Z4B8.1|DNAJ_STAAT|Full=Chaperone protein DnaJ	394	1e-121
+A6QHC2.1|DNAJ_STAAE|Full=Chaperone protein DnaJ	394	1e-121
+A7X2Y0.1|DNAJ_STAA1|Full=Chaperone protein DnaJ	394	1e-121
+Q6GGC1.1|DNAJ_STAAR|Full=Chaperone protein DnaJ	393	1e-121
+Q92BN9.1|DNAJ_LISIN|Full=Chaperone protein DnaJ	393	2e-121
+B8DE39.1|DNAJ_LISMH|Full=Chaperone protein DnaJ	393	2e-121
+G2K045.1|DNAJ_LISM4|Full=Chaperone protein DnaJ	393	2e-121
+P0DJM1.1|DNAJ_LISMO|Full=Chaperone protein DnaJ	393	2e-121
+A8FFD1.1|DNAJ_BACP2|Full=Chaperone protein DnaJ	393	2e-121
+Q65H55.1|DNAJ_BACLD|Full=Chaperone protein DnaJ	392	2e-121
+A0Q1T4.1|OBG_CLONN|Full=GTPase Obg|Full=G	394	4e-121
+Q18B27.1|OBG_CLOD6|Full=GTPase Obg|Full=G	394	5e-121
+P45555.1|DNAJ_STAAU|Full=Chaperone protein DnaJ	392	6e-121
+Q2YT48.1|DNAJ_STAAB|Full=Chaperone protein DnaJ	390	1e-120
+B9E6X0.1|DNAJ_MACCJ|Full=Chaperone protein DnaJ	389	2e-120
+B2GBQ6.1|DNAJ_LACF3|Full=Chaperone protein DnaJ	390	2e-120
+A7GT07.1|DNAJ_BACCN|Full=Chaperone protein DnaJ	388	5e-120
+A7Z6W0.1|DNAJ_BACVZ|Full=Chaperone protein DnaJ	388	1e-119
+A4IR30.1|DNAJ_GEOTN|Full=Chaperone protein DnaJ	388	1e-119
+A3DBS5.1|OBG_HUNT2|Full=GTPase Obg|Full=G	390	1e-119
+B0KAB8.1|OBG_THEP3|Full=GTPase Obg|Full=G	389	2e-119
+B0K414.1|OBG_THEPX|Full=GTPase Obg|Full=G	389	2e-119
+Q9EXP2.1|SUFS_DICD3|Full=Cysteine desulfurase|AltN	389	2e-119
+Q97JL4.1|OBG_CLOAB|Full=GTPase Obg|Full=G	389	3e-119
+Q8DVR0.1|BRPA_STRMU|Full=Biofilm regulatory protein	388	3e-119
+B2TK70.1|OBG_CLOBB|Full=GTPase Obg|Full=G	387	1e-118
+B8FUR9.1|OBG_DESHD|Full=GTPase Obg|Full=G	387	1e-118
+Q044A8.1|DNAJ_LACGA|Full=Chaperone protein DnaJ	385	2e-118
+Q74IT7.1|DNAJ_LACJO|Full=Chaperone protein DnaJ	385	2e-118
+B1YKT0.1|DNAJ_EXIS2|Full=Chaperone protein DnaJ	383	3e-118
+Q24SP0.1|OBG_DESHY|Full=GTPase Obg|Full=G	385	4e-118
+P17631.3|DNAJ_BACSU|Full=Chaperone protein DnaJ	382	1e-117
+Q8RBA5.1|OBG_CALS4|Full=GTPase Obg|Full=G	383	2e-117
+Q67SC6.1|OBG_SYMTH|Full=GTPase Obg|Full=G	383	3e-117
+P77212.2|RCLA_ECOLI|Full=Probable pyridine nucleoti	382	7e-117
+Q5KWZ8.1|DNAJ_GEOKA|Full=Chaperone protein DnaJ	379	1e-116
+Q8CXD3.1|DNAJ_OCEIH|Full=Chaperone protein DnaJ	378	3e-116
+A6LQR9.1|OBG_CLOB8|Full=GTPase Obg|Full=G	380	4e-116
+B2A6B7.1|OBG_NATTJ|Full=GTPase Obg|Full=G	379	2e-115
+A6TQJ6.1|OBG_ALKMQ|Full=GTPase Obg|Full=G	377	3e-115
+A9NF57.1|OBG_ACHLI|Full=GTPase Obg|Full=G	376	6e-115
+Q9LA06.1|HTRA_LACLA|Full=Serine protease Do-like HtrA   375	9e-115
+Q049W7.1|DNAJ_LACDB|Full=Chaperone protein DnaJ	373	2e-114
+Q1G9R3.1|DNAJ_LACDA|Full=Chaperone protein DnaJ	373	2e-114
+Q892N8.1|OBG_CLOTE|Full=GTPase Obg|Full=G	373	8e-114
+Q84BU3.1|DNAJ_LACAC|Full=Chaperone protein DnaJ	367	2e-112
+B2V0A8.1|OBG_CLOBA|Full=GTPase Obg|Full=G	369	2e-112
+B9E021.2|OBG_CLOK1|Full=GTPase Obg|Full=G	369	3e-112
+Q9KD71.1|DNAJ_BACHD|Full=Chaperone protein DnaJ	365	5e-112
+B0BS63.1|MNMA_ACTPJ|Full=tRNA-specific 2-thiouridyl	365	1e-111
+Q8XIJ2.1|OBG_CLOPE|Full=GTPase Obg|Full=G	364	1e-110
+Q0SR54.1|OBG_CLOPS|Full=GTPase Obg|Full=G	364	1e-110
+Q0TNI5.1|OBG_CLOP1|Full=GTPase Obg|Full=G	364	1e-110
+A3MYN0.1|MNMA_ACTP2|Full=tRNA-specific 2-thiouridyl	362	2e-110
+Q5WHG0.1|DNAJ_BACSK|Full=Chaperone protein DnaJ	359	1e-109
+A9AXD9.1|OBG_HERA2|Full=GTPase Obg|Full=G	359	8e-109
+Q2RKZ8.1|OBG_MOOTA|Full=GTPase Obg|Full=G	357	3e-108
+A9KMF5.1|OBG_LACP7|Full=GTPase Obg|Full=G	355	1e-107
+B9L101.1|OBG_THERP|Full=GTPase Obg|Full=G	357	2e-107
+B8GA36.1|OBG_CHLAD|Full=GTPase Obg|Full=G	355	3e-107
+Q730M2.1|DNAJ_BACC1|Full=Chaperone protein DnaJ	352	4e-107
+B7HPL2.1|DNAJ_BACC7|Full=Chaperone protein DnaJ	352	4e-107
+B9IY80.1|DNAJ_BACCQ|Full=Chaperone protein DnaJ	352	4e-107
+B7IYG6.1|DNAJ_BACC2|Full=Chaperone protein DnaJ	351	7e-107
+B7HCT9.1|DNAJ_BACC4|Full=Chaperone protein DnaJ	351	7e-107
+B1I5V8.1|OBG_DESAP|Full=GTPase Obg|Full=G	353	7e-107
+B7JN38.1|DNAJ_BACC0|Full=Chaperone protein DnaJ	350	1e-106
+Q6HDK8.1|DNAJ_BACHK|Full=Chaperone protein DnaJ	350	1e-106
+C3P8L9.1|DNAJ_BACAA|Full=Chaperone protein DnaJ	350	1e-106
+C3L5R6.1|DNAJ_BACAC|Full=Chaperone protein DnaJ	350	1e-106
+Q81LS3.1|DNAJ_BACAN|Full=Chaperone protein DnaJ	350	1e-106
+Q634M8.1|DNAJ_BACCZ|Full=Chaperone protein DnaJ	350	2e-106
+C1ESK7.1|DNAJ_BACC3|Full=Chaperone protein DnaJ	350	2e-106
+Q9LCQ4.1|DNAJ_BRECH|Full=Chaperone protein DnaJ	349	3e-106
+A9VHU0.1|DNAJ_BACMK|Full=Chaperone protein DnaJ	348	6e-106
+P80880.3|TRXB_BACSU|Full=Thioredoxin reductase|Sho	344	2e-105
+C0ZB49.1|DNAJ_BREBN|Full=Chaperone protein DnaJ	346	3e-105
+Q818F0.1|DNAJ_BACCR|Full=Chaperone protein DnaJ	346	3e-105
+Q8RHS8.1|OBG_FUSNN|Full=GTPase Obg|Full=G	347	8e-105
+A9WK62.1|OBG_CHLAA|Full=GTPase Obg|Full=G	347	1e-104
+B9LC30.1|OBG_CHLSY|Full=GTPase Obg|Full=G	347	1e-104
+B1LA53.1|OBG_THESQ|Full=GTPase Obg|Full=G	347	1e-104
+A5IKX2.1|OBG_THEP1|Full=GTPase Obg|Full=G	347	1e-104
+C4L424.1|DNAJ_EXISA|Full=Chaperone protein DnaJ	343	3e-104
+A8F478.1|OBG_PSELT|Full=GTPase Obg|Full=G	346	3e-104
+O34507.1|PRKC_BACSU|Full=Serine/threonine-protein k	348	2e-102
+B0S3Z4.1|OBG_FINM2|Full=GTPase Obg|Full=G	339	3e-102
+B8CXL0.1|DNAJ_HALOH|Full=Chaperone protein DnaJ	337	6e-102
+Q05852.1|GTAB_BACSU|Full=UTP--glucose-1-phosphate u	331	4e-101
+A0Q1R3.1|DNAJ_CLONN|Full=Chaperone protein DnaJ	333	2e-100
+C0QUB5.1|OBG_PERMH|Full=GTPase Obg|Full=G	330	3e-100
+B1H0I4.1|OBG_ENDTX|Full=GTPase Obg|Full=G	333	5e-100
+B5YEQ1.1|OBG_DICT6|Full=GTPase Obg|Full=G	333	7e-100
+A5UZ80.1|OBG_ROSS1|Full=GTPase Obg|Full=G	333	8e-100
+B9K736.1|OBG_THENN|Full=GTPase Obg|Full=G	333	1e-99 
+P37887.3|CYSK_BACSU|Full=Cysteine synthase|Short=C	325	5e-99 
+A8G9K9.1|DNAJ_SERP5|Full=Chaperone protein DnaJ	328	8e-99 
+A7NRU6.2|OBG_ROSCS|Full=GTPase Obg|Full=G	330	1e-98 
+B2V968.1|OBG_SULSY|Full=GTPase Obg|Full=G	326	1e-98 
+A7WXP7.1|LDH1_STAA1|Full=L-lactate dehydrogenase 1;	324	2e-98 
+P30725.2|DNAJ_CLOAB|Full=Chaperone protein DnaJ	327	2e-98 
+Q9WXV3.1|OBG_THEMA|Full=GTPase Obg|Full=G	329	2e-98 
+A3DF24.1|DNAJ_HUNT2|Full=Chaperone protein DnaJ	327	3e-98 
+Q8XIT1.1|DNAJ_CLOPE|Full=Chaperone protein DnaJ	326	4e-98 
+B2TLZ8.1|DNAJ_CLOBB|Full=Chaperone protein DnaJ	325	5e-98 
+A6LRN5.1|DNAJ_CLOB8|Full=Chaperone protein DnaJ	325	9e-98 
+Q6KHM2.1|OBG_MYCMO|Full=GTPase Obg|Full=G	327	1e-97 
+B2V2I6.1|DNAJ_CLOBA|Full=Chaperone protein DnaJ	324	1e-97 
+Q55804.1|CRHR_SYNY3|Full=RNA helicase CrhR	 328	2e-97 
+A5UYW4.1|DNAJ_ROSS1|Full=Chaperone protein DnaJ	322	5e-97 
+Q45552.1|DNAJ_GEOSE|Full=Chaperone protein DnaJ	322	7e-97 
+Q747Q2.1|OBG_GEOSL|Full=GTPase Obg|Full=G	320	1e-96 
+O67849.1|OBG_AQUAE|Full=GTPase Obg|Full=G	320	1e-96 
+A6LJZ0.1|OBG_THEM4|Full=GTPase Obg|Full=G	323	2e-96 
+A7NS65.1|DNAJ_ROSCS|Full=Chaperone protein DnaJ	320	3e-96 
+P63969.1|DNAJ_NEIMB|Full=Chaperone protein DnaJ	320	4e-96 
+P63968.1|DNAJ_NEIMA|Full=Chaperone protein DnaJ	320	4e-96 
+A9LZV9.1|DNAJ_NEIM0|Full=Chaperone protein DnaJ	320	4e-96 
+A1KR91.1|DNAJ_NEIMF|Full=Chaperone protein DnaJ	320	4e-96 
+P08164.5|NADE_BACSU|Full=NH(3)-dependent NAD(+) syn	315	7e-96 
+C5B7L8.1|DNAJ_EDWI9|Full=Chaperone protein DnaJ	319	9e-96 
+Q8RB67.1|DNAJ_CALS4|Full=Chaperone protein DnaJ	319	1e-95 
+B7KIC1.1|OBG_GLOC7|Full=GTPase Obg|Full=G	317	1e-95 
+B2KAW2.1|OBG_ELUMP|Full=GTPase Obg|Full=G	322	2e-95 
+B5YYA8.1|DNAJ_ECO5E|Full=Chaperone protein DnaJ	318	3e-95 
+Q3Z600.1|DNAJ_SHISS|Full=Chaperone protein DnaJ	318	3e-95 
+Q8FLC5.3|DNAJ_ECOL6|Full=Chaperone protein DnaJ	318	3e-95 
+Q8XA65.3|DNAJ_ECO57|Full=Chaperone protein DnaJ	318	3e-95 
+Q1RGI7.1|DNAJ_ECOUT|Full=Chaperone protein DnaJ	318	3e-95 
+A7ZHA5.1|DNAJ_ECO24|Full=Chaperone protein DnaJ	318	3e-95 
+A7ZVV8.1|DNAJ_ECOHS|Full=Chaperone protein DnaJ	318	3e-95 
+B1IRF9.1|DNAJ_ECOLC|Full=Chaperone protein DnaJ	318	3e-95 
+B7MAD6.1|DNAJ_ECO45|Full=Chaperone protein DnaJ	318	3e-95 
+B7NHB7.1|DNAJ_ECO7I|Full=Chaperone protein DnaJ	318	3e-95 
+B7M0B1.1|DNAJ_ECO8A|Full=Chaperone protein DnaJ	318	3e-95 
+B7N7N9.1|DNAJ_ECOLU|Full=Chaperone protein DnaJ	318	3e-95 
+B6HZ11.1|DNAJ_ECOSE|Full=Chaperone protein DnaJ	318	3e-95 
+B1LFU5.1|DNAJ_ECOSM|Full=Chaperone protein DnaJ	318	3e-95 
+B7LVP7.1|DNAJ_ESCF3|Full=Chaperone protein DnaJ	318	3e-95 
+B7UI60.1|DNAJ_ECO27|Full=Chaperone protein DnaJ	318	3e-95 
+B7L4D9.1|DNAJ_ECO55|Full=Chaperone protein DnaJ	318	3e-95 
+B7MNM2.1|DNAJ_ECO81|Full=Chaperone protein DnaJ	318	3e-95 
+Q326K6.1|DNAJ_SHIBS|Full=Chaperone protein DnaJ	318	3e-95 
+B2U233.1|DNAJ_SHIB3|Full=Chaperone protein DnaJ	318	3e-95 
+Q0T8H5.1|DNAJ_SHIF8|Full=Chaperone protein DnaJ	317	5e-95 
+A7FME2.1|DNAJ_YERP3|Full=Chaperone protein DnaJ	317	7e-95 
+Q24SS4.1|DNAJ_DESHY|Full=Chaperone protein DnaJ	317	8e-95 
+B8FUN3.1|DNAJ_DESHD|Full=Chaperone protein DnaJ	317	8e-95 
+B2K3M1.1|DNAJ_YERPB|Full=Chaperone protein DnaJ	317	8e-95 
+Q66ES9.1|DNAJ_YERPS|Full=Chaperone protein DnaJ	317	8e-95 
+Q8ZIM6.1|DNAJ_YERPE|Full=Chaperone protein DnaJ	317	8e-95 
+Q1CMV6.1|DNAJ_YERPN|Full=Chaperone protein DnaJ	317	8e-95 
+Q1C0J8.1|DNAJ_YERPA|Full=Chaperone protein DnaJ	317	8e-95 
+A4TQF8.1|DNAJ_YERPP|Full=Chaperone protein DnaJ	317	8e-95 
+A9R014.1|DNAJ_YERPG|Full=Chaperone protein DnaJ	317	8e-95 
+B1JL03.1|DNAJ_YERPY|Full=Chaperone protein DnaJ	317	8e-95 
+Q32KA4.1|DNAJ_SHIDS|Full=Chaperone protein DnaJ	316	8e-95 
+B1VAF2.1|OBG_PHYAS|Full=GTPase Obg|Full=G	318	9e-95 
+B1XBE0.1|DNAJ_ECODH|Full=Chaperone protein DnaJ	316	1e-94 
+P08622.3|DNAJ_ECOLI|Full=Chaperone protein DnaJ|Al	316	1e-94 
+C4ZPU1.1|DNAJ_ECOBW|Full=Chaperone protein DnaJ	316	1e-94 
+B3QZT1.1|OBG_PHYMT|Full=GTPase Obg|Full=G	317	2e-94 
+Q98QK8.1|OBG_MYCPU|Full=GTPase Obg|Full=G	317	2e-94 
+Q5F5M1.1|DNAJ_NEIG1|Full=Chaperone protein DnaJ	315	3e-94 
+Q5N4J6.1|OBG_SYNP6|Full=GTPase Obg|Full=G	313	3e-94 
+Q31PN0.1|OBG_SYNE7|Full=GTPase Obg|Full=G	313	3e-94 
+B7IGK8.1|OBG_THEAB|Full=GTPase Obg|Full=G	316	6e-94 
+B5YJ65.1|OBG_THEYD|Full=GTPase Obg|Full=G	311	9e-94 
+Q5PDJ4.3|DNAJ_SALPA|Full=Chaperone protein DnaJ	313	1e-93 
+B5BLH9.1|DNAJ_SALPK|Full=Chaperone protein DnaJ	313	1e-93 
+Q6YRC6.1|OBG_ONYPE|Full=GTPase Obg|Full=G	315	1e-93 
+P0A1G7.2|DNAJ_SALTY|Full=Chaperone protein DnaJ	312	2e-93 
+P0A1G8.2|DNAJ_SALTI|Full=Chaperone protein DnaJ	312	2e-93 
+Q57TP2.3|DNAJ_SALCH|Full=Chaperone protein DnaJ	312	2e-93 
+A9MXI3.1|DNAJ_SALPB|Full=Chaperone protein DnaJ	312	2e-93 
+B5F6Y9.1|DNAJ_SALA4|Full=Chaperone protein DnaJ	312	2e-93 
+B5FHA7.1|DNAJ_SALDC|Full=Chaperone protein DnaJ	312	2e-93 
+B5R5I3.1|DNAJ_SALEP|Full=Chaperone protein DnaJ	312	2e-93 
+B5RF09.1|DNAJ_SALG2|Full=Chaperone protein DnaJ	312	2e-93 
+B4TIB5.1|DNAJ_SALHS|Full=Chaperone protein DnaJ	312	2e-93 
+B4T6D7.1|DNAJ_SALNS|Full=Chaperone protein DnaJ	312	2e-93 
+B4TVZ6.1|DNAJ_SALSV|Full=Chaperone protein DnaJ	312	2e-93 
+C0Q4F4.1|DNAJ_SALPC|Full=Chaperone protein DnaJ	312	2e-93 
+Q39QR4.1|OBG_GEOMG|Full=GTPase Obg|Full=G	311	2e-93 
+Q2G2U4.1|WALK_STAA8|Full=Sensor protein kinase WalK	321	2e-93 
+A7WWQ7.1|WALK_STAA1|Full=Sensor protein kinase WalK	321	2e-93 
+A9FJF8.1|OBG_SORC5|Full=GTPase Obg|Full=G	311	3e-93 
+A6T4F5.1|DNAJ_KLEP7|Full=Chaperone protein DnaJ	311	3e-93 
+A9BK05.1|OBG_PETMO|Full=GTPase Obg|Full=G	314	3e-93 
+Q7N8Y3.1|DNAJ_PHOLL|Full=Chaperone protein DnaJ	311	6e-93 
+Q1DC95.1|OBG_MYXXD|Full=GTPase Obg|Full=G	315	6e-93 
+C1DD87.1|DNAJ_LARHH|Full=Chaperone protein DnaJ	311	7e-93 
+A9MR76.1|DNAJ_SALAR|Full=Chaperone protein DnaJ	310	7e-93 
+B5Y241.1|DNAJ_KLEP3|Full=Chaperone protein DnaJ	310	8e-93 
+Q4A6N4.1|OBG_MYCS5|Full=GTPase Obg|Full=G	312	1e-92 
+B2IYX1.1|OBG_NOSP7|Full=GTPase Obg|Full=G	308	1e-92 
+Q1QSX1.1|DNAJ_CHRSD|Full=Chaperone protein DnaJ	310	2e-92 
+Q892R1.1|DNAJ_CLOTE|Full=Chaperone protein DnaJ	309	3e-92 
+A5N6M3.1|DNAJ_CLOK5|Full=Chaperone protein DnaJ	308	5e-92 
+A4W6D6.1|DNAJ_ENT38|Full=Chaperone protein DnaJ	308	7e-92 
+Q182E7.1|DNAJ_CLOD6|Full=Chaperone protein DnaJ	308	7e-92 
+Q2LR77.2|OBG_SYNAS|Full=GTPase Obg|Full=G	306	8e-92 
+B2VGS0.1|DNAJ_ERWT9|Full=Chaperone protein DnaJ	308	9e-92 
+A1JJD6.1|DNAJ_YERE8|Full=Chaperone protein DnaJ	307	9e-92 
+A7HIF8.1|OBG_ANADF|Full=GTPase Obg|Full=G	306	1e-91 
+Q6RSN5.1|DNAJ_RHIRD|Full=Chaperone protein DnaJ	307	1e-91 
+C6DF09.1|DNAJ_PECCP|Full=Chaperone protein DnaJ	306	2e-91 
+Q7UDU1.3|DNAJ_SHIFL|Full=Chaperone protein DnaJ	306	2e-91 
+Q2NIK0.1|OBG_AYWBP|Full=GTPase Obg|Full=G	308	2e-91 
+B3E609.1|OBG_GEOLS|Full=GTPase Obg|Full=G	305	2e-91 
+P50018.2|DNAJ_AGRFC|Full=Chaperone protein DnaJ	306	2e-91 
+A5GD29.1|OBG_GEOUR|Full=GTPase Obg|Full=G	305	2e-91 
+B4F2V6.1|DNAJ_PROMH|Full=Chaperone protein DnaJ	306	2e-91 
+Q3A1D8.1|OBG_PELCD|Full=GTPase Obg|Full=G	305	3e-91 
+B4UIU2.1|OBG_ANASK|Full=GTPase Obg|Full=G	305	3e-91 
+Q2IH84.1|OBG_ANADE|Full=GTPase Obg|Full=G	305	4e-91 
+Q65U54.2|DNAJ_MANSM|Full=Chaperone protein DnaJ	305	4e-91 
+Q6D0B8.1|DNAJ_PECAS|Full=Chaperone protein DnaJ	305	5e-91 
+Q05646.1|DNAJ_ERYRH|Full=Chaperone protein DnaJ	305	5e-91 
+B8JBP2.1|OBG_ANAD2|Full=GTPase Obg|Full=G	304	7e-91 
+Q5HF23.1|PEPVL_STAAC|Full=Putative dipeptidase SACO	308	7e-91 
+B9M3W3.1|OBG_GEODF|Full=GTPase Obg|Full=G	303	8e-91 
+B5E958.1|OBG_GEOBB|Full=GTPase Obg|Full=G	303	9e-91 
+G2K265.1|CLPB_LISM4|Full=Chaperone protein ClpB	321	1e-90 
+P39794.3|PTTBC_BACSU|Full=PTS system trehalose-spec	307	2e-90 
+O34242.2|DNAJ_VIBCH|Full=Chaperone protein DnaJ	303	5e-90 
+A5F362.1|DNAJ_VIBC3|Full=Chaperone protein DnaJ	303	5e-90 
+C3LTA6.1|DNAJ_VIBCM|Full=Chaperone protein DnaJ	303	5e-90 
+A7HZ38.1|DNAJ_PARL1|Full=Chaperone protein DnaJ	303	5e-90 
+A7MIK3.1|DNAJ_CROS8|Full=Chaperone protein DnaJ	302	5e-90 
+Q2JJ90.1|OBG_SYNJB|Full=GTPase Obg|Full=G	301	8e-90 
+Q67S53.1|DNAJ_SYMTH|Full=Chaperone protein DnaJ	302	8e-90 
+B7JVH9.1|OBG_RIPO1|Full=GTPase Obg|Full=G	300	9e-90 
+Q6F0U3.1|OBG_MESFL|Full=GTPase Obg|Full=G	304	1e-89 
+A7HJZ8.1|OBG_FERNB|Full=GTPase Obg|Full=G	304	1e-89 
+A4XYF5.1|DNAJ_PSEMY|Full=Chaperone protein DnaJ	301	1e-89 
+B0BTI6.1|DNAJ_ACTPJ|Full=Chaperone protein DnaJ	301	2e-89 
+Q8DKR7.2|DNAJ_THEEB|Full=Chaperone protein DnaJ	300	3e-89 
+Q602A7.1|OBG_MYCH2|Full=GTPase Obg|Full=G	302	3e-89 
+Q9HV44.1|DNAJ_PSEAE|Full=Chaperone protein DnaJ	300	3e-89 
+Q02FR2.1|DNAJ_PSEAB|Full=Chaperone protein DnaJ	300	3e-89 
+B7V1H2.1|DNAJ_PSEA8|Full=Chaperone protein DnaJ	300	3e-89 
+Q7NB30.2|OBG_MYCGA|Full=GTPase Obg|Full=G	302	4e-89 
+A4F9L3.1|OBG_SACEN|Full=GTPase Obg|Full=G	304	4e-89 
+Q6MTG9.1|OBG_MYCMS|Full=GTPase Obg|Full=G	302	4e-89 
+Q6VAY5.1|DNAJ_PSEST|Full=Chaperone protein DnaJ	300	5e-89 
+Q4A8X1.1|OBG_MYCH7|Full=GTPase Obg|Full=G	301	5e-89 
+A6VNB0.1|DNAJ_ACTSZ|Full=Chaperone protein DnaJ	300	6e-89 
+B8E0B2.1|OBG_DICTD|Full=GTPase Obg|Full=G	301	8e-89 
+Q1BYX2.1|DNAJ_BURCA|Full=Chaperone protein DnaJ	299	1e-88 
+A0K4S9.1|DNAJ_BURCH|Full=Chaperone protein DnaJ	299	1e-88 
+B1JW20.1|DNAJ_BURCC|Full=Chaperone protein DnaJ	299	1e-88 
+B4EDZ1.1|DNAJ_BURCJ|Full=Chaperone protein DnaJ	299	1e-88 
+A9KG87.1|DNAJ_COXBN|Full=Chaperone protein DnaJ	299	1e-88 
+B6J7U6.1|DNAJ_COXB1|Full=Chaperone protein DnaJ	299	1e-88 
+B0CDA2.1|OBG_ACAM1|Full=GTPase Obg|Full=G	298	1e-88 
+Q11KJ5.1|DNAJ_CHESB|Full=Chaperone protein DnaJ	298	1e-88 
+C1DFM2.1|DNAJ_AZOVD|Full=Chaperone protein DnaJ	298	2e-88 
+C3MC05.1|DNAJ_SINFN|Full=Chaperone protein DnaJ	298	2e-88 
+A4JBS2.1|DNAJ_BURVG|Full=Chaperone protein DnaJ	298	2e-88 
+Q8L397.1|DNAJ_ACHLA|Full=Chaperone protein DnaJ	298	2e-88 
+A6UEY1.1|DNAJ_SINMW|Full=Chaperone protein DnaJ	298	2e-88 
+Q4AAV4.1|OBG_MYCHJ|Full=GTPase Obg|Full=G	300	2e-88 
+Q0BI17.1|DNAJ_BURCM|Full=Chaperone protein DnaJ	298	2e-88 
+B1YTK1.1|DNAJ_BURA4|Full=Chaperone protein DnaJ	298	2e-88 
+B8FM68.1|OBG_DESAL|Full=GTPase Obg|Full=G	296	3e-88 
