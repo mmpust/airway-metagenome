@@ -38,7 +38,7 @@ bwa index 2020_09_reference.fa
 <br/>
 
 
-The adhesion protein sequence database
+The adhesin protein sequence database
 
 ```bash
 # Download database
