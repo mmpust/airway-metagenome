@@ -11,7 +11,7 @@ The one-strain per species multi-FASTA file
 ```bash
 
 # Download database
-https://sync.academiccloud.de/index.php/s/h1it8NhwGSMaKGe/download
+wget https://sync.academiccloud.de/index.php/s/h1it8NhwGSMaKGe/download
 
 # Unzip the reference database 
 gunzip complete_bacterialRefSeqs_201910_3.fasta.gz
@@ -26,7 +26,7 @@ The pangenome multi-FASTA file
 
 ```bash
 # Download database
-https://sync.academiccloud.de/index.php/s/vOTDJ9qDR6tvn0w/download
+wget https://sync.academiccloud.de/index.php/s/vOTDJ9qDR6tvn0w/download
 
 # Unzip the reference database 
 gunzip 2020_09_reference.fa.gz
@@ -42,7 +42,7 @@ The adhesin protein sequence multi-FASTA file
 
 ```bash
 # Download database
-https://sync.academiccloud.de/index.php/s/YaL6NXMEavuZWkd/download
+wget https://sync.academiccloud.de/index.php/s/YaL6NXMEavuZWkd/download
 ```
 <br/>
 
