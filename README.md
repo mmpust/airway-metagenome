@@ -2,7 +2,7 @@
 <br>
 Marie-Madlen Pust<sup>1,2</sup>, Burkhard Tümmler<sup>1,2</sup> <br>
 <sup>1</sup>Department of Paediatric Pneumology, Allergology, and Neonatology, Hannover Medical School (MHH), Germany <br>
-<sup>2</sup>Biomedical Research in Endstage and Obstructive Lung Disease Hannover (BREATH), German Center for Lung Research, Hannover Medical School, Germany <br><br>
+<sup>2</sup>Biomedical Research in Endstage and Obstructive Lung Disease Hannover (BREATH), German Center for Lung Research, Hannover Medical School, Germany <br><br><br/>
 
 
 **Reference databases** <br/>
@@ -44,3 +44,12 @@ The adhesin protein sequence multi-FASTA file
 # Download database
 https://sync.academiccloud.de/index.php/s/YaL6NXMEavuZWkd/download
 ```
+<br/>
+
+**R files with in-text comments** <br/>
+1. step_1_bootstrapping_aggregations.R
+2. step_2_simulation_runs.R
+3. step_3_functional_analysis.R
+<br/>
+
+**R session, information** <br/>
