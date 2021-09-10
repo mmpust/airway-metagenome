@@ -9,21 +9,24 @@ Marie-Madlen Pust<sup>1,2</sup>, Burkhard Tümmler<sup>1,2</sup> <br>
 The one-strain per species multi-FASTA file can be obtained (see instructions below).
 
 ```bash
-https://sync.academiccloud.de/index.php/s/wSpNHavgEX4CTeX/download
+
+# Download database
+https://sync.academiccloud.de/index.php/s/h1it8NhwGSMaKGe/download
 
 # Unzip the reference database 
-gunzip 2020_09_reference.fa.gz
+gunzip complete_bacterialRefSeqs_201910_3.fasta.gz
 
 # Generate an index of the reference fasta depending on the alignment tool of your choice
-samtools faidx 2020_09_reference.fa
-bwa index 2020_09_reference.fa
+samtools complete_bacterialRefSeqs_201910_3.fasta
+bwa index complete_bacterialRefSeqs_201910_3.fasta
 ```
 
-**Reference databases** <br/>
+<br/>
 The pangenome multi-FASTA file can be obtained (see instructions below).
 
 ```bash
-https://sync.academiccloud.de/index.php/s/wSpNHavgEX4CTeX/download
+# Download database
+https://sync.academiccloud.de/index.php/s/vOTDJ9qDR6tvn0w
 
 # Unzip the reference database 
 gunzip 2020_09_reference.fa.gz
@@ -32,3 +35,7 @@ gunzip 2020_09_reference.fa.gz
 samtools faidx 2020_09_reference.fa
 bwa index 2020_09_reference.fa
 ```
+
+
+**Declaration of Competing Interest** <br/>
+The authors declare no competing interests. 
