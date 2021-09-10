@@ -26,7 +26,7 @@ The pangenome multi-FASTA file can be obtained (see instructions below).
 
 ```bash
 # Download database
-https://sync.academiccloud.de/index.php/s/vOTDJ9qDR6tvn0w
+https://sync.academiccloud.de/index.php/s/vOTDJ9qDR6tvn0w/download
 
 # Unzip the reference database 
 gunzip 2020_09_reference.fa.gz
