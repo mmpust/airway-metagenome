@@ -8,7 +8,7 @@
 rm(list=ls())
 
 # set working directory
-setwd('C:/Users/marie/Desktop/Simulations_early_infant_microbiome/R')
+setwd('C:/Simulations_early_infant_microbiome/R')
 
 ############################################################################################################
 # define global functions
@@ -1891,22 +1891,22 @@ adhesion_heatmap <-
 
 ############################################################################################################
 # Output, figures
-tiff(filename = "output_figures/adhesion_heatmap.tif", width=30, height = 32, 
+tiff(filename = "Supplementary_Figure_04.tif", width=30, height = 32, 
      res=300, bg="white", units="cm", pointsize = 14)
 adhesion_heatmap
 dev.off()
 
-tiff(filename="output_figures/fm_plot.tif", width=12, height=22, 
+tiff(filename="Figure_03.tif", width=12, height=22, 
      units="cm", res=600, bg="white")
 FM_plot_H
 dev.off()
 
-tiff(filename="output_figures/dendrogram.tif", res=300, 
+tiff(filename="Supplementary_Figure_03.tif", res=300, 
      units="in", width=6, height=5)
 strep_hier
 dev.off()
 
-tiff(filename="output_figures/pao1_plots.tif", width=3.4, height=1.4, 
+tiff(filename="Supplementary_Figure_03.tif", width=3.4, height=1.4, 
      units="in", res=300, bg="white")
 PAO1_stats_plot
 dev.off()
