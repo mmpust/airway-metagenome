@@ -7,7 +7,7 @@
 rm(list=ls())
 
 # set working directory
-setwd('C:/Users/marie/Desktop/Simulations_early_infant_microbiome/R')
+setwd('C:/Simulations_early_infant_microbiome/R')
 
 ############################################################################################################
 # define global functions
@@ -40,6 +40,7 @@ sig_level = 0.01
 
 # network parameters
 directed_network=FALSE
+
 ############################################################################################################
 # load packages
 ipak(packages)
@@ -131,7 +132,6 @@ rownames(ds_osps_vst) <- ds_osps_vst$Species
 ds_osps_vst$Species <- NULL
 
 ############################################################################################################
-
 # load background species table, BCPHC-normalised
 background_species <- read_delim("background_species.csv", ";", escape_double = FALSE, trim_ws = TRUE)
 
@@ -202,7 +202,6 @@ background_rare_cf_vst <- subset(background_species, State == "CF" & Species_typ
 background_rare_cf_vst <- background_rare_cf_vst[!duplicated(background_rare_cf_vst$Species),]
 
 ############################################################################################################
-
 # Correlation between rare and core species
 # generate correlation matrix
 # healthy, extract background rare species (as defined by pangenome and one-strain per species)
@@ -265,8 +264,6 @@ df_h_rare_bcphc_nodes$species_type <- ifelse(df_h_rare_bcphc_nodes$Id %in% backg
 # add genus information
 df_h_rare_bcphc_nodes$Genus <- df_h_rare_bcphc_nodes$Id
 df_h_rare_bcphc_nodes$Genus <- sapply(strsplit(as.character(df_h_rare_bcphc_nodes$Genus)," "), `[`, 1)
-
-
 
 # CF, background rare
 # CF, extract background rare species (as defined by pangenome and one-strain per species)
@@ -332,7 +329,7 @@ df_cf_rare_bcphc_nodes$Genus <- sapply(strsplit(as.character(df_cf_rare_bcphc_no
 
 
 ############################################################################################################
-# Generate networks ####
+# Generate networks 
 # healthy, background core and rare species
 # convert species type (core or rare) from class character to class factor
 df_h_rare_bcphc_nodes$species_type <- as.factor(as.character(df_h_rare_bcphc_nodes$species_type))
@@ -430,7 +427,6 @@ cf_net_bcphc_plot <- ggplot() +
         axis.title.y = element_blank())
 
 ############################################################################################################
-
 # Correlation between rare and core species, RLE normalised
 # generate correlation matrix
 # healthy, extract background rare species (as defined by pangenome and one-strain per species)
@@ -658,7 +654,6 @@ cf_net_rle_plot <- ggplot() +
         axis.title.y = element_blank())
 
 ############################################################################################################
-
 # Correlation between rare and core species, VST- normalised
 # generate correlation matrix
 # healthy, extract background rare species (as defined by pangenome and one-strain per species)
@@ -883,7 +878,6 @@ cf_net_vst_plot <- ggplot() +
         axis.title.y = element_blank())
 
 ############################################################################################################
-
 # robustness and vulnerability analysis (targeted attack)
 # healthy, background core and rare species
 # BCPHC-normalised data
@@ -923,9 +917,6 @@ cf_rare_net_bcphc_matrix_degree <- as.matrix(cf_rare_net_bcphc_matrix_degree)
 # subset fraction_removed and degree columns, Healthy, BCPHC-normalised
 h_rare_net_bcphc_matrix_degree <- select(h_rare_net_bcphc_attack, select_items_bcphc_1)
 # convert data frame to matrix
-#############################################################################################
-h_rare_net_bcphc_matrix_degree <- h_rare_net_bcphc_matrix_degree[-c(3,6,9),] # remove
-############################################################################################
 h_rare_net_bcphc_matrix_degree <- as.matrix(h_rare_net_bcphc_matrix_degree)
 # calculate Frechet distance between healthy and CF attack curves, bcphc-normalised data
 original_frechet_h_cf_degree_bcphc <- Frechet(h_rare_net_bcphc_matrix_degree, cf_rare_net_bcphc_matrix_degree, testLeash = -1)
@@ -977,9 +968,6 @@ cf_rare_net_rle_matrix_degree <- select(cf_rare_net_rle_attack, select_items_rle
 cf_rare_net_rle_matrix_degree <- as.matrix(cf_rare_net_rle_matrix_degree)
 # subset fraction_removed and degree columns, Healthy, RLE-normalised
 h_rare_net_rle_matrix_degree <- select(h_rare_net_rle_attack, select_items_rle_1)
-################################################################################################
-h_rare_net_rle_matrix_degree <- h_rare_net_rle_matrix_degree[-c(3,6,9),]
-################################################################################################
 # convert to data matrix
 h_rare_net_rle_matrix_degree <- as.matrix(h_rare_net_rle_matrix_degree)
 # calculate Frechet distance between healthy and CF attack curve
@@ -1033,20 +1021,10 @@ cf_rare_net_vst_matrix_degree <- select(cf_rare_net_vst_attack, select_items_vst
 cf_rare_net_vst_matrix_degree <- as.matrix(cf_rare_net_vst_matrix_degree)
 # subset fraction_removed and degree columns, Healthy, VST-normalised
 h_rare_net_vst_matrix_degree <- select(h_rare_net_vst_attack, select_items_vst_1)
-
-################################################################################
-h_rare_net_vst_matrix_degree <- h_rare_net_vst_matrix_degree[-c(3,6,9),] # remove
-################################################################################
-
 # convert to matrix
 h_rare_net_vst_matrix_degree <- as.matrix(h_rare_net_vst_matrix_degree)
 #  calculate Frechet distance between CF and healthy network, VST-normalised data
 original_frechet_h_cf_degree_vst <- Frechet(h_rare_net_vst_matrix_degree, cf_rare_net_vst_matrix_degree, testLeash = -1)
-
-################################################################################
-original_frechet_h_cf_degree_vst <- original_frechet_h_cf_degree_vst + 0.13 # 0.2
-################################################################################
-
 # convert degree to data frame, CF, VST-normalised
 cf_rare_net_vst_matrix_degree <- data.frame(cf_rare_net_vst_matrix_degree)
 # add meta data
@@ -1063,7 +1041,6 @@ all_matrix_degree <- data.frame(rbind(cf_rare_net_bcphc_matrix_degree, cf_rare_n
                                       h_rare_net_bcphc_matrix_degree, h_rare_net_rle_matrix_degree, h_rare_net_vst_matrix_degree))
 
 ############################################################################################################
-
 # Continue robustness and vulnerability analysis for random attacks
 # subset fraction_removed and random columns, CF, BCPHC-normalised
 cf_rare_net_bcphc_matrix_random <- select(cf_rare_net_bcphc_attack, select_items_bcphc_2)
@@ -1071,9 +1048,6 @@ cf_rare_net_bcphc_matrix_random <- select(cf_rare_net_bcphc_attack, select_items
 cf_rare_net_bcphc_matrix_random <- as.matrix(cf_rare_net_bcphc_matrix_random)
 # subset fraction_removed and random columns, Healthy, BCPHC-normalised
 h_rare_net_bcphc_matrix_random <- select(h_rare_net_bcphc_attack, select_items_bcphc_2)
-##############################################################################################################
-h_rare_net_bcphc_matrix_random <- h_rare_net_bcphc_matrix_random[-c(3,6,9),] # remove
-##############################################################################################################
 # convert to matrix
 h_rare_net_bcphc_matrix_random <- as.matrix(h_rare_net_bcphc_matrix_random)
 # calculate Frechet distance between healthy and CF random attack curves
@@ -1096,9 +1070,6 @@ cf_rare_net_rle_matrix_random <- select(cf_rare_net_rle_attack, select_items_rle
 cf_rare_net_rle_matrix_random <- as.matrix(cf_rare_net_rle_matrix_random)
 # subset fraction_removed and random columns, Healthy, RLE-normalised
 h_rare_net_rle_matrix_random <- select(h_rare_net_rle_attack, select_items_rle_2)
-################################################################################################################
-h_rare_net_rle_matrix_random <- h_rare_net_rle_matrix_random[-c(3,6,9),] # remove
-################################################################################################################
 # convert to matrix
 h_rare_net_rle_matrix_random <- as.matrix(h_rare_net_rle_matrix_random) 
 # calculate Frechet distance between healthy and CF random attack curves
@@ -1121,9 +1092,6 @@ cf_rare_net_vst_matrix_random <- select(cf_rare_net_vst_attack, select_items_vst
 cf_rare_net_vst_matrix_random <- as.matrix(cf_rare_net_vst_matrix_random)
 # subset fraction_removed and random columns, Healthy, VST-normalised
 h_rare_net_vst_matrix_random <- select(h_rare_net_vst_attack, select_items_vst_2)
-#############################################################################################################
-h_rare_net_vst_matrix_random <- h_rare_net_vst_matrix_random[-c(3,6,9),] # remove
-#############################################################################################################
 # convert to matrix
 h_rare_net_vst_matrix_random <- as.matrix(h_rare_net_vst_matrix_random)
 # calculate Frechet distance between healthy and CF random attack curves
@@ -1144,7 +1112,6 @@ all_matrix_random <- data.frame(rbind(cf_rare_net_bcphc_matrix_random, cf_rare_n
                                       h_rare_net_bcphc_matrix_random, h_rare_net_rle_matrix_random, h_rare_net_vst_matrix_random))
 
 ############################################################################################################
-
 # generate targeted plot 
 targeted_attack <- ggplot(all_matrix_degree) +
   geom_vline(aes(xintercept=0.25), colour="grey", linetype="dashed") +
@@ -1187,7 +1154,6 @@ net_rle_vst <- ggarrange(cf_net_vst_plot, h_net_vst_plot, cf_net_rle_plot, h_net
 
 
 ############################################################################################################
-
 # Network modulation 
 # Set base seed (for reproducibility purposes)
 set.seed(111)
@@ -1669,27 +1635,12 @@ frechet_attack_similarity_vst_maximum <- ddply(frechet_attack_similarity_vst,"n_
 colnames(frechet_attack_similarity_vst_maximum) <- c("n_nodes_max", "i_max","cf_hrare_deg_frechet_max")
 # bind information into one data frame
 frechet_attack_similartiy_degree_vst <- data.frame(cbind(frechet_attack_similarity_vst_median,frechet_attack_similarity_vst_minimum, frechet_attack_similarity_vst_maximum))
-
-##################################################################################################################
-frechet_attack_similartiy_degree_vst$cf_hrare_deg_frechet_med <- 
-  with(frechet_attack_similartiy_degree_vst, ifelse(n_nodes_med > 6, cf_hrare_deg_frechet_med, cf_hrare_deg_frechet_med + 0.1)) # delete
-
-frechet_attack_similartiy_degree_vst$cf_hrare_deg_frechet_min <- 
-  with(frechet_attack_similartiy_degree_vst, ifelse(n_nodes_med > 6, cf_hrare_deg_frechet_min, cf_hrare_deg_frechet_min + 0.1)) # delete
-
-frechet_attack_similartiy_degree_vst$cf_hrare_deg_frechet_max <- 
-  with(frechet_attack_similartiy_degree_vst, ifelse(n_nodes_med > 6, cf_hrare_deg_frechet_max,cf_hrare_deg_frechet_max + 0.1)) # delete
-##################################################################################################################
-
 # rename column names for all normalisation strategies so that they are matching
 colnames(frechet_attack_similarity_vst) <- c("i", "n_nodes", "frechet")
 colnames(frechet_attack_similarity_rle) <- c("i", "n_nodes", "frechet")
 colnames(frechet_attack_similarity_bcphc) <- c("i", "n_nodes", "frechet")
 # add meta data
 frechet_attack_similarity_vst$normalisation <- "VST"
-####################################################################################
-frechet_attack_similarity_vst$frechet <- with(frechet_attack_similarity_vst, ifelse(n_nodes > 6, frechet, frechet + 0.1))
-####################################################################################
 frechet_attack_similarity_bcphc$normalisation <- "BCPHC"
 frechet_attack_similarity_rle$normalisation <- "RLE"
 # bind all data frames into one
@@ -1702,7 +1653,6 @@ frechet_attack_similartiy_degree_rle$normalisation <- "RLE"
 frechet_attack_df <- data.frame(rbind(frechet_attack_similartiy_degree_vst, frechet_attack_similartiy_degree, frechet_attack_similartiy_degree_rle))
 
 ############################################################################################################
-
 # Kernel-based evaluation of simulation runs
 # Shortest pathway kernel, BCPHC
 # calculate the median shortest path kernel per number of nodes that was inserted into CF network
@@ -1879,8 +1829,6 @@ kernel_shortestPahway_df_rle$normalisation <- "RLE"
 kernel_shortestPahway_df_bcphc$normalisation <- "BCPHC"
 kernel_shortestPathway_df <- data.frame(rbind(kernel_shortestPahway_df_vst, kernel_shortestPahway_df_rle, kernel_shortestPahway_df_bcphc))
 
-
-
 ############################################################################################################
 # generate simulation plots
 # Weisfeiler-Lehman plot
@@ -1992,6 +1940,7 @@ spearman.ci(frechet_attack_similarity_bcphc$frechet, frechet_attack_similarity_b
 # RLE-normalised data
 cor.test(frechet_attack_similarity_rle$frechet, frechet_attack_similarity_rle$n_nodes, method = "spearman")
 spearman.ci(frechet_attack_similarity_rle$frechet, frechet_attack_similarity_rle$n_nodes, nrep=1000)
+
 ############################################################################################################
 # Evaluation of simulation outcome based on species number, species diversity and species dominance
 # BCPHC-normalised data, join information of Frechet distance outputs and selected species
@@ -2043,11 +1992,6 @@ table_outcome$Var3 <- as.numeric(as.character(table_outcome$Var3))
 # scale the percentage column
 table_outcome$Per_scale <- rescale(table_outcome$Per, to=c(-2,2))
 
-########################################################################################################
-table_outcome$Per_scale <- with(table_outcome, 
-                                ifelse(Var4 == "VST" & Var1 == "Worse" & Var3 > 6, -2, Per_scale)) # remove!!
-#######################################################################################################
-
 # obtain background rare species for all normalisation strategies
 background_rare <- c(background_rare_h_rle$Species, background_rare_h_bcphc$Species,background_rare_h_vst$Species)
 # remove duplicates
@@ -2065,7 +2009,6 @@ merge_hboth_wide <- spread(table_outcome, key="Var2", value="Freq")
 # remove percentage and scale columns
 merge_hboth_wide$Per <- NULL
 merge_hboth_wide$Per_scale <- NULL
-
 
 # extract runs that improved the network
 merge_hboth_wide_better <- subset(merge_hboth_wide, Var1 == "Improved")
@@ -2095,8 +2038,7 @@ hboth_better_dominance_bcphc <- vegan::diversity(merge_hboth_wide_better_bcphc, 
 # Dominance indices
 hboth_better_BPindex_bcphc <- microbiome::dominance(t(merge_hboth_wide_better_bcphc))
 # store all indices in one data frame
-div_hboth_better_bcphc <- data.frame(cbind(hboth_better_fisher_bcphc, hboth_better_shannon_bcphc, 
-                                           hboth_better_specNum_bcphc, hboth_better_dominance_bcphc, 
+div_hboth_better_bcphc <- data.frame(cbind(hboth_better_fisher_bcphc, hboth_better_shannon_bcphc, hboth_better_specNum_bcphc, hboth_better_dominance_bcphc, 
                                            hboth_better_BPindex_bcphc$gini))
 # rename columns
 colnames(div_hboth_better_bcphc) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
@@ -2126,8 +2068,7 @@ hboth_better_dominance_rle <- vegan::diversity(merge_hboth_wide_better_rle, inde
 # Dominance indices
 hboth_better_BPindex_rle <- microbiome::dominance(t(merge_hboth_wide_better_rle))
 # store all indices in one data frame
-div_hboth_better_rle <- data.frame(cbind(hboth_better_fisher_rle, hboth_better_shannon_rle, 
-                                         hboth_better_specNum_rle, hboth_better_dominance_rle, 
+div_hboth_better_rle <- data.frame(cbind(hboth_better_fisher_rle, hboth_better_shannon_rle, hboth_better_specNum_rle, hboth_better_dominance_rle, 
                                          hboth_better_BPindex_rle$gini))
 # rename columns
 colnames(div_hboth_better_rle) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
@@ -2168,7 +2109,6 @@ div_hboth_better_vst$normalisation <- "VST"
 # combine all normalisation outputs in one data frame
 div_hboth_better <- data.frame(rbind(div_hboth_better_bcphc,div_hboth_better_rle,div_hboth_better_vst))
 
-
 # extract runs that destabilised the network
 merge_hboth_wide_worse <- subset(merge_hboth_wide, Var1 == "Worse")
 
@@ -2198,8 +2138,7 @@ hboth_worse_dominance_bcphc <- vegan::diversity(merge_hboth_wide_worse_bcphc, in
 # Dominance indices
 hboth_worse_BPindex_bcphc <- microbiome::dominance(t(merge_hboth_wide_worse_bcphc))
 # store all indices in one data frame
-div_hboth_worse_bcphc <- data.frame(cbind(hboth_worse_fisher_bcphc, hboth_worse_shannon_bcphc, 
-                                          hboth_worse_specNum_bcphc, hboth_worse_dominance_bcphc, 
+div_hboth_worse_bcphc <- data.frame(cbind(hboth_worse_fisher_bcphc, hboth_worse_shannon_bcphc, hboth_worse_specNum_bcphc, hboth_worse_dominance_bcphc, 
                                           hboth_worse_BPindex_bcphc$gini))
 # rename columns
 colnames(div_hboth_worse_bcphc) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
@@ -2233,8 +2172,7 @@ hboth_worse_dominance_rle <- vegan::diversity(merge_hboth_wide_worse_rle, index 
 # Dominance index
 hboth_worse_BPindex_rle <- microbiome::dominance(t(merge_hboth_wide_worse_rle))
 # store all indices in one data frame
-div_hboth_worse_rle <- data.frame(cbind(hboth_worse_fisher_rle, hboth_worse_shannon_rle, 
-                                        hboth_worse_specNum_rle, hboth_worse_dominance_rle, 
+div_hboth_worse_rle <- data.frame(cbind(hboth_worse_fisher_rle, hboth_worse_shannon_rle, hboth_worse_specNum_rle, hboth_worse_dominance_rle, 
                                         hboth_worse_BPindex_rle$gini))
 # add column names
 colnames(div_hboth_worse_rle) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
@@ -2371,3 +2309,4 @@ tiff(filename="output_figures/Figure_06.tif", res=600, units="in", width=9, heig
 heatmap_plot
 dev.off()
 ############################################################################################################
+        
