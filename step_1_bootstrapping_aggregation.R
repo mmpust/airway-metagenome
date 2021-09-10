@@ -8,7 +8,7 @@
 rm(list=ls())
 
 # set working directory
-setwd('C:/Users/marie/Desktop/Simulations_early_infant_microbiome/R')
+setwd('C:/Simulations_early_infant_microbiome/R')
 
 ############################################################################################################
 
@@ -9147,7 +9147,6 @@ plot_rf <- ggarrange(plot_accuracy, plot_gini, common.legend = TRUE, legend='bot
 # get information on class errors
 # bind pangenome and one-strain per species database
 rf.error.all <- data.frame(rbind(rf.error.osps.all, rf.error.pangenome.all))
-rf.error.all <- subset(rf.error.all, OOB_all > 0)
 
 # mean OOB estimate of error (total)
 mean_OOB_all <- mean(rf.error.all$OOB_all)
@@ -9170,39 +9169,39 @@ sd_OOB_H #0.07
 
 ############################################################################################################
 # Final output, figures
-tiff(filename="output_figures/Supplementary_Figure_01.tif",
+tiff(filename="Supplementary_Figure_01.tif",
      height=2, width=2.7, res=800, units="in")
 line_plots
 dev.off()
 
-tiff(filename="output_figures/Figure_01.tif",
+tiff(filename="Figure_01.tif",
      height=8, width=8, res=600, units="in")
 vennDiagramsPlot_pangenome
 dev.off()
 
-tiff(filename="output_figures/random_forest.tif",
+tiff(filename="Figure_02.tif",
      height=11, width=8, res=600, units="in")
 plot_rf
 dev.off()
 
 ############################################################################################################
 # Final output, tables
-write.table(compare_rf_table, file='output_figures/rf_statistics.csv', 
+write.table(compare_rf_table, file='rf_statistics.csv', 
             sep=';', row.names = FALSE,
             col.names = TRUE)
 
-write.table(compare_rf_table_effsize, file='output_figures/rf_statistics_effsize.csv', 
+write.table(compare_rf_table_effsize, file='rf_statistics_effsize.csv', 
             sep=';', row.names = FALSE,
             col.names = TRUE)
 
-write.table(venn_core_care_stats, file='output_figures/venn_statistics.csv', 
+write.table(venn_core_care_stats, file='venn_statistics.csv', 
             sep=';', row.names = FALSE,
             col.names = TRUE)
 
-write.table(venn_core_rare_stats_effsize, file='output_figures/venn_statistics_effsize.csv', 
+write.table(venn_core_rare_stats_effsize, file='venn_statistics_effsize.csv', 
             sep=';', row.names = FALSE,
             col.names = TRUE)
 
-write.table(background_table, file = 'input_files/taxonomic_data/background_species.csv', 
+write.table(background_table, file = 'background_species.csv', 
             row.names = FALSE, col.names = TRUE, sep=';')
 ############################################################################################################
