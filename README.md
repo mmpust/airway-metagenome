@@ -35,7 +35,12 @@ gunzip 2020_09_reference.fa.gz
 samtools faidx 2020_09_reference.fa
 bwa index 2020_09_reference.fa
 ```
+<br/>
 
 
-**Declaration of Competing Interest** <br/>
-The authors declare no competing interests. 
+The adhesion protein sequence database
+
+```bash
+# Download database
+https://sync.academiccloud.de/index.php/s/YaL6NXMEavuZWkd/download
+```
