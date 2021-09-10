@@ -6,7 +6,7 @@ Marie-Madlen Pust<sup>1,2</sup>, Burkhard Tümmler<sup>1,2</sup> <br>
 
 
 **Reference databases** <br/>
-The one-strain per species multi-FASTA file can be obtained (see instructions below).
+The one-strain per species multi-FASTA file
 
 ```bash
 
@@ -22,7 +22,7 @@ bwa index complete_bacterialRefSeqs_201910_3.fasta
 ```
 
 <br/>
-The pangenome multi-FASTA file can be obtained (see instructions below).
+The pangenome multi-FASTA file 
 
 ```bash
 # Download database
