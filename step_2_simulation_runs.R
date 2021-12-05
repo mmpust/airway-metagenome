@@ -1,13 +1,13 @@
-# title: "Step 3, Simulation runs"
+# title: "Step 2, Simulation runs"
 # author: "Marie-Madlen Pust"
-# last update: "10 September 2021"
+# last update: "05 December 2021"
 
 ############################################################################################################
 # clean global environment
 rm(list=ls())
 
 # set working directory
-setwd('C:/Simulations_early_infant_microbiome/R')
+setwd('C:/R')
 
 ############################################################################################################
 # define global functions
@@ -22,7 +22,7 @@ ipak <- function(pkg){
 packages <- c('readr','viridis','dplyr','stringr','tidyr','ggplot2','factoextra','gmodels','ggpubr','plyr','purrr','Hmisc',
               'reshape','vegan','magrittr','scales','grid','reshape2','rcompanion','SimilarityMeasures','viridis','knitr', 
               'ggrepel','forcats','pheatmap', 'cowplot', 'popgraph', 'qgraph', 'sna', 'tidygraph','expm','igraph','NetSwan',
-              'CINNA', 'graphkernels', 'data.table', 'microbiome', 'RVAideMemoire')
+              'CINNA', 'graphkernels', 'data.table', 'microbiome', 'RVAideMemoire', 'bipartite', 'corrplot', 'ROCR')
 
 # generate network statistics
 all_indices <- function(g){
@@ -39,18 +39,25 @@ weight_val_neg = -0.2
 sig_level = 0.01
 
 # network parameters
-directed_network=FALSE
+directed_network=FALSE 
+
+# network evaluation, null models
+net.metric.zscore = function(obsval, nullval) {(obsval - mean(nullval))/sd(nullval)} 
+net.metric.pvalue = function(x){2*pnorm(-abs(x))}
+
+nullmodel_method = "shuffle.web" 
+nullmodel_networks_n = 100 
 
 ############################################################################################################
 # load packages
 ipak(packages)
-############################################################################################################
 
+############################################################################################################
 # import meta data table of patients
 md <- read_delim('input_files/meta_data/spatial_metadata_2020_12_2.csv', ';', escape_double = FALSE, trim_ws = TRUE)
 # convert to data frame object
 md <- data.frame(md)
-# make sample IDs rownames
+# make sample IDs row names
 rownames(md) <- md$Sample 
 # remove sample IDs as column
 md$Sample <- NULL
@@ -329,7 +336,7 @@ df_cf_rare_bcphc_nodes$Genus <- sapply(strsplit(as.character(df_cf_rare_bcphc_no
 
 
 ############################################################################################################
-# Generate networks 
+# Generate networks ####
 # healthy, background core and rare species
 # convert species type (core or rare) from class character to class factor
 df_h_rare_bcphc_nodes$species_type <- as.factor(as.character(df_h_rare_bcphc_nodes$species_type))
@@ -359,7 +366,7 @@ h.net_bcphc.plot.edges$to.x <- h.net_bcphc.plot.df$V1[match(h.net_bcphc.plot.edg
 h.net_bcphc.plot.edges$to.y <- h.net_bcphc.plot.df$V2[match(h.net_bcphc.plot.edges$to, h.net_bcphc.plot.df$Id)]
 # link species to type information (core or rare species)
 h.net_bcphc.plot.edges$species_type <- ifelse(h.net_bcphc.plot.edges$from %in% background_rare_h_bcphc$Species, "rare", 
-                                        ifelse(h.net_bcphc.plot.edges$from %in% background_core_h_bcphc$Species, "core", "undefined"))
+                                              ifelse(h.net_bcphc.plot.edges$from %in% background_core_h_bcphc$Species, "core", "undefined"))
 
 
 # cf, background core and rare 
@@ -403,28 +410,20 @@ cf.net_bcphc.plot.edges$species_type <- ifelse(cf.net_bcphc.plot.edges$from %in%
 # generate network plot (healthy, BCPHC-normalised)
 h_net_bcphc_plot <- ggplot() + 
   geom_segment(data = h.net_bcphc.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = h.net_bcphc.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = h.net_bcphc.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=h.net_bcphc.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 # generate network plot (CF, BCPHC-normalised)
 cf_net_bcphc_plot <- ggplot() + 
   geom_segment(data = cf.net_bcphc.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = cf.net_bcphc.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = cf.net_bcphc.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=cf.net_bcphc.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 ############################################################################################################
 # Correlation between rare and core species, RLE normalised
@@ -490,7 +489,6 @@ df_h_rare_rle_nodes$species_type <- ifelse(df_h_rare_rle_nodes$Id %in% backgroun
 df_h_rare_rle_nodes$Genus <- df_h_rare_rle_nodes$Id
 df_h_rare_rle_nodes$Genus <- sapply(strsplit(as.character(df_h_rare_rle_nodes$Genus)," "), `[`, 1)
 
-
 # CF, background rare
 # extract background rare species (as defined by pangenome and one-strain per species)
 df_cf_rare_rle <- subset(ds_pangenome_rle, rownames(ds_pangenome_rle) %in% background_core_cf_rle$Species | rownames(ds_pangenome_rle) %in% background_rare_cf_rle$Species)
@@ -552,7 +550,6 @@ df_cf_rare_rle_nodes$species_type <- ifelse(df_cf_rare_rle_nodes$Id %in% backgro
 # obtain Genus information
 df_cf_rare_rle_nodes$Genus <- df_cf_rare_rle_nodes$Id
 df_cf_rare_rle_nodes$Genus <- sapply(strsplit(as.character(df_cf_rare_rle_nodes$Genus)," "), `[`, 1)
-
 
 ############################################################################################################
 # Make networks, RLE-normalised
@@ -630,30 +627,23 @@ cf.net_rle.plot.edges$species_type <- ifelse(cf.net_rle.plot.edges$from %in% bac
 # generate network plot (healthy, RLE-normalised)
 h_net_rle_plot <- ggplot() + 
   geom_segment(data = h.net_rle.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = h.net_rle.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = h.net_rle.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=h.net_rle.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 # generate network plot (CF, RLE-normalised)
 cf_net_rle_plot <- ggplot() + 
   geom_segment(data = cf.net_rle.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = cf.net_rle.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = cf.net_rle.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=cf.net_rle.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 ############################################################################################################
+
 # Correlation between rare and core species, VST- normalised
 # generate correlation matrix
 # healthy, extract background rare species (as defined by pangenome and one-strain per species)
@@ -717,6 +707,7 @@ df_h_rare_vst_nodes$species_type <- ifelse(df_h_rare_vst_nodes$Id %in% backgroun
 df_h_rare_vst_nodes$Genus <- df_h_rare_vst_nodes$Id
 df_h_rare_vst_nodes$Genus <- sapply(strsplit(as.character(df_h_rare_vst_nodes$Genus)," "), `[`, 1)
 
+
 # # CF, background rare
 # CF, extract background rare species (as defined by pangenome and one-strain per species)
 df_cf_rare_vst <- subset(ds_pangenome_vst, rownames(ds_pangenome_vst) %in% background_core_cf_vst$Species | rownames(ds_pangenome_vst) %in% background_rare_cf_vst$Species)
@@ -779,7 +770,6 @@ df_cf_rare_vst_nodes$species_type <- ifelse(df_cf_rare_vst_nodes$Id %in% backgro
 df_cf_rare_vst_nodes$Genus <- df_cf_rare_vst_nodes$Id
 df_cf_rare_vst_nodes$Genus <- sapply(strsplit(as.character(df_cf_rare_vst_nodes$Genus)," "), `[`, 1)
 
-
 ############################################################################################################
 # Generate networks 
 # healthy, background core and rare species ####
@@ -791,7 +781,7 @@ h_rare_net_vst <- graph_from_data_frame(d=df_h_rare_vst_COR_edges_short, vertice
 h_rare_net_vst <- simplify(h_rare_net_vst, remove.multiple = T, remove.loops = T)
 # add colour code with rare = blue and core = green
 V(h_rare_net_vst)$color <- ifelse(V(h_rare_net_vst)$species_type == "rare", "lightsteelblue2", "springgreen4")
-# apply fruchterman reingold graph 
+# apply Fruchterman eingold graph 
 h.net_vst.plot <- layout.fruchterman.reingold(h_rare_net_vst)
 # convert to data frame
 h.net_vst.plot.df <- as.data.frame(h.net_vst.plot)
@@ -854,28 +844,20 @@ cf.net_vst.plot.edges$species_type <- ifelse(cf.net_vst.plot.edges$from %in% bac
 
 # generate network plot, healthy, VST-normalised
 h_net_vst_plot <- ggplot() + geom_segment(data = h.net_vst.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = h.net_vst.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = h.net_vst.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=h.net_vst.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 # generate network plot, CF, VST-normalised
 cf_net_vst_plot <- ggplot() + 
   geom_segment(data = cf.net_vst.plot.edges, aes(x = from.x, xend = to.x, y = from.y, yend = to.y, colour=species_type), alpha=0.6) +
-  geom_point(data = cf.net_vst.plot.df, aes(x=V1,y=V2,colour=species_type),size=0.9) +  
+  geom_point(data = cf.net_vst.plot.df, aes(x=V1,y=V2,colour=species_type),size=2) +  
+  geom_label_repel(data=cf.net_vst.plot.df, aes(x=V1,y=V2,label=Id, colour=species_type), fontface="italic", size=2) +
   theme_pubr(border=FALSE, legend = "none")  +
-  scale_colour_manual(values=c("springgreen4", "darkblue")) +
-  theme(axis.text.x = element_blank(),  
-        axis.text.y = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.line = element_blank(),
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+  scale_colour_manual(values=c("core"="darkorange", "rare"="darkblue")) +
+  theme(axis.text.x = element_blank(),  axis.text.y = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank())
 
 ############################################################################################################
 # robustness and vulnerability analysis (targeted attack)
@@ -930,7 +912,6 @@ h_rare_net_bcphc_matrix_degree <- data.frame(h_rare_net_bcphc_matrix_degree)
 # add meta data
 h_rare_net_bcphc_matrix_degree$normalisation <- "BCPHC"
 h_rare_net_bcphc_matrix_degree$state <- "Healthy"
-
 
 # healthy, background core and rare species
 # RLE-normalised data
@@ -1021,10 +1002,12 @@ cf_rare_net_vst_matrix_degree <- select(cf_rare_net_vst_attack, select_items_vst
 cf_rare_net_vst_matrix_degree <- as.matrix(cf_rare_net_vst_matrix_degree)
 # subset fraction_removed and degree columns, Healthy, VST-normalised
 h_rare_net_vst_matrix_degree <- select(h_rare_net_vst_attack, select_items_vst_1)
+
 # convert to matrix
 h_rare_net_vst_matrix_degree <- as.matrix(h_rare_net_vst_matrix_degree)
 #  calculate Frechet distance between CF and healthy network, VST-normalised data
 original_frechet_h_cf_degree_vst <- Frechet(h_rare_net_vst_matrix_degree, cf_rare_net_vst_matrix_degree, testLeash = -1)
+
 # convert degree to data frame, CF, VST-normalised
 cf_rare_net_vst_matrix_degree <- data.frame(cf_rare_net_vst_matrix_degree)
 # add meta data
@@ -1041,6 +1024,7 @@ all_matrix_degree <- data.frame(rbind(cf_rare_net_bcphc_matrix_degree, cf_rare_n
                                       h_rare_net_bcphc_matrix_degree, h_rare_net_rle_matrix_degree, h_rare_net_vst_matrix_degree))
 
 ############################################################################################################
+
 # Continue robustness and vulnerability analysis for random attacks
 # subset fraction_removed and random columns, CF, BCPHC-normalised
 cf_rare_net_bcphc_matrix_random <- select(cf_rare_net_bcphc_attack, select_items_bcphc_2)
@@ -1112,6 +1096,7 @@ all_matrix_random <- data.frame(rbind(cf_rare_net_bcphc_matrix_random, cf_rare_n
                                       h_rare_net_bcphc_matrix_random, h_rare_net_rle_matrix_random, h_rare_net_vst_matrix_random))
 
 ############################################################################################################
+
 # generate targeted plot 
 targeted_attack <- ggplot(all_matrix_degree) +
   geom_vline(aes(xintercept=0.25), colour="grey", linetype="dashed") +
@@ -1119,11 +1104,10 @@ targeted_attack <- ggplot(all_matrix_degree) +
   geom_hline(aes(yintercept=0.835), colour="grey", linetype="dashed") +
   geom_point(aes(x=fraction_removed, y=degree, colour=state, shape=normalisation), size=1.2) +
   geom_line(aes(x=fraction_removed, y=degree, colour=state, shape=normalisation), size=0.3) +
-  theme_bw(base_size=10) + 
+  theme_bw() + 
   scale_colour_manual(values=c("darkred", "black")) + xlab("p (targeted)") + ylab("Network efficiency") +
-  theme(panel.grid = element_blank(), 
-        legend.title = element_blank(),
-        axis.title = element_text(size=9))
+  theme(panel.grid = element_blank(), legend.title = element_blank(), axis.title = element_text(size=11), axis.text = element_text(size=11), 
+        legend.text = element_text(size=10, family = "Arial"))
 
 # generate random plot
 random_attack <- ggplot(all_matrix_random) +
@@ -1132,35 +1116,31 @@ random_attack <- ggplot(all_matrix_random) +
   geom_hline(aes(yintercept=0.54), colour="grey", linetype="dashed") +
   geom_point(aes(x=fraction_removed, y=random, colour=state, shape=normalisation), size=1.2) +
   geom_line(aes(x=fraction_removed, y=random, colour=state, shape=normalisation), size=0.3) +
-  theme_bw(base_size=10) + 
+  theme_bw() + 
   scale_colour_manual(values=c("darkred", "black")) + xlab("p (random)") + ylab(" ") +
-  theme(panel.grid = element_blank(), 
-        legend.title = element_blank(),
-        axis.title = element_text(size=9))
+  theme(panel.grid = element_blank(), legend.title = element_blank(), legend.text = element_text(size=10, family = "Arial"), axis.title = element_text(size=11), 
+        axis.text = element_text(size=11))
 
-# merge cf and healthy plot, BCPHC-normalised
-ab1_bcphc <- ggarrange(h_net_bcphc_plot, cf_net_bcphc_plot, nrow = 1, ncol = 2, labels = c("A", "B"), 
-                       label.x = 0.029, label.y = 0.98, font.label = list(size = 10, color = "black")) 
+# merge cf and healthy plot, RLE-normalised
+ab1_bcphc <- ggarrange(h_net_rle_plot, cf_net_rle_plot, nrow = 1, ncol = 2, labels = c("A", "B"), label.x = 0.01, label.y = 0.98, font.label = list(size = 12, color = "black")) 
 
 # merge targeted and random attack plots
-attack_plots <- ggarrange(targeted_attack, random_attack, labels=c("C", "D"), common.legend = TRUE, 
-                          font.label = list(size = 10, color = "black"))
+attack_plots <- ggarrange(targeted_attack, random_attack, labels=c("C", "D"), common.legend = TRUE, font.label = list(size = 12, color = "black"), legend = "right")
 
 # merge cf and healthy network plots, BCPHC-normalised + attack curves of all normalisation steps
-first_net_bcphc_plot <- ggarrange(ab1_bcphc, attack_plots, nrow=2, heights = c(0.6,1))
+first_net_bcphc_plot <- ggarrange(ab1_bcphc, attack_plots, nrow=2, heights = c(1,1))
 
 # merge cf and healthy network plots, VST and RLE-normalised
-net_rle_vst <- ggarrange(cf_net_vst_plot, h_net_vst_plot, cf_net_rle_plot, h_net_rle_plot, heights = c(0.6,0.6))
-
+net_rle_vst <- ggarrange(cf_net_vst_plot, h_net_vst_plot, cf_net_bcphc_plot, h_net_bcphc_plot, heights = c(0.6,0.6), labels=c("A", "B", "C", "D"), font.label = list(size = 12, color ="black"))
 
 ############################################################################################################
 # Network modulation 
 # Set base seed (for reproducibility purposes)
 set.seed(111)
-# Generate random integers between 1 and 200
-random_seeds <- sample(1:500, 200, replace = FALSE) 
+# Generate 100 random integers between 1 and 500
+random_seeds <- sample(1:500, 100, replace = FALSE) 
 # number of nodes to be inserted later on
-add_nodes <- c(1:20)
+add_nodes <- c(1:20) 
 
 # define empty variables globally for the loop assignment later on, BCPHC-normalised
 frechet_attack_similarity_bcphc = NULL
@@ -1169,6 +1149,7 @@ netwerk_kernel_randomWalk_bcphc = NULL
 network_kernel_shortestPath_bcphc = NULL
 network_kernel_WL_bcphc = NULL
 selected_species_bcphc = NULL
+network_nullmodel_bcphc = NULL
 
 # define empty variables globally for the loop assignment later on, RLE-normalised
 frechet_attack_similarity_rle = NULL
@@ -1177,6 +1158,7 @@ netwerk_kernel_randomWalk_rle = NULL
 network_kernel_shortestPath_rle = NULL
 network_kernel_WL_rle = NULL
 selected_species_rle = NULL
+network_nullmodel_rle = NULL
 
 # define empty variables globally for the loop assignment later on, VST-normalised
 frechet_attack_similarity_vst = NULL
@@ -1185,6 +1167,7 @@ netwerk_kernel_randomWalk_vst = NULL
 network_kernel_shortestPath_vst = NULL
 network_kernel_WL_vst = NULL
 selected_species_vst = NULL
+network_nullmodel_vst = NULL
 sample_with_replacement = TRUE 
 
 # loop over list of random seeds
@@ -1193,6 +1176,9 @@ for (i in random_seeds){
   for (n_nodes in add_nodes){
     # set seed
     set.seed(i)
+    print(n_nodes)
+    print(i)
+    print(random_seeds)
     # start with BCPHC-normalised data
     # randomly extract species (with replacement) from healthy network, BCPHC
     sample_h_rare_0_bcphc <- sample(V(h_rare_net_bcphc)$name, n_nodes, replace = sample_with_replacement)
@@ -1216,11 +1202,35 @@ for (i in random_seeds){
     new_cf_rare_edges_bcphc <- data.frame(rbind(h_net_subset_for_cf_rare_bcphc_df_edges, cf_rare_net_bcphc_df_edges))
     # keep only unique rows from a data frame
     new_cf_rare_edges_bcphc <- distinct(new_cf_rare_edges_bcphc)
+    
     # make a new graph from dataframe of modulated CF structure
-    new_cf_rare_net_bcphc <- graph_from_data_frame(new_cf_rare_edges_bcphc, 
-                                                   directed=directed_network, vertices=new_cf_rare_nodes_bcphc)
+    new_cf_rare_net_bcphc <- graph_from_data_frame(new_cf_rare_edges_bcphc, directed=directed_network, vertices=new_cf_rare_nodes_bcphc)
+    
+    # null model
+    new_net_bcphc_asdj <- as_adjacency_matrix(new_cf_rare_net_bcphc, type="both")
+    new_net_bcphc_matrix <- as.matrix(new_net_bcphc_asdj)
+    # Calculate network metric extinction slope
+    originalMod_net_bcphc_extinction <- networklevel(new_net_bcphc_matrix, index = "extinction slope", extinctmethod='degree')
+    originalMod_net_bcphc_extinction <- originalMod_net_bcphc_extinction[2]
+    # make null model
+    nullmodelMod_bcphc <- nullmodel(new_net_bcphc_matrix, N=nullmodel_networks_n, method=nullmodel_method)
+    nullmodelMod_bcphc_extinction <- unlist(sapply(nullmodelMod_bcphc, networklevel, index = 'extinction slope', extinctmethod='degree'))  
+    nullmodelMod_bcphc_extinction <- nullmodelMod_bcphc_extinction[2,]
+    # get zscore and p value between original and random network structures
+    bcphc_mod_zscore <- net.metric.zscore(originalMod_net_bcphc_extinction, nullmodelMod_bcphc_extinction)
+    bcphc_mod_pvalue <- net.metric.pvalue(bcphc_mod_zscore)
+    
+    # generate final data frame
+    nullmodelMod_stats_extinction_bcphc <- data.frame(cbind(bcphc_mod_zscore, bcphc_mod_pvalue))
+    nullmodelMod_stats_extinction_bcphc$normlisation <- "BCPHC"
+    nullmodelMod_stats_extinction_bcphc$seed <- i
+    nullmodelMod_stats_extinction_bcphc$n_nodes <- n_nodes
+    nullmodelMod_stats_extinction_bcphc$index <- "Robustness"
+    colnames(nullmodelMod_stats_extinction_bcphc) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    rownames(nullmodelMod_stats_extinction_bcphc) <- NULL
+    
     # assesses networks vulnerability due to targeted attacks with 10 iterations for assessing random error
-    new_cf_net_attack_rare_bcphc <- swan_combinatory(new_cf_rare_net_bcphc,10)
+    new_cf_net_attack_rare_bcphc <- swan_combinatory(new_cf_rare_net_bcphc, 10)
     # convert to data frame
     new_cf_net_attack_rare_bcphc <- data.frame(new_cf_net_attack_rare_bcphc)
     # rename columns
@@ -1274,9 +1284,9 @@ for (i in random_seeds){
     # calculate Weisfeiler-Lehmann kernel
     my_K3_bcphc <- CalculateWLKernel(my_list1_bcphc, 5)
     # convert to data frame
-    my_K_bcphc_df3 <- data.frame(my_K3_bcphc)
+    my_K_bcphc_df2 <- data.frame(my_K3_bcphc)
     # normalise to healthy structure
-    my_K_bcphc_df3 <- my_K_bcphc_df3 / 	my_K_bcphc_df3[1,1]
+    my_K_bcphc_df3 <- my_K_bcphc_df2 / 	my_K_bcphc_df2[1,1]
     # rename columns
     colnames(my_K_bcphc_df3) <- c("Healthy", "CF", "modulated CF")
     # rename rows
@@ -1284,12 +1294,37 @@ for (i in random_seeds){
     # keep first row
     my_K_bcphc_df3 <- my_K_bcphc_df3[1,]
     
+    # re-set row names
+    nullmodelMod_bcphc_names <- lapply(nullmodelMod_bcphc, function(x) {rownames(x) <- rownames(new_net_bcphc_matrix); x })
+    # re-set column names
+    nullmodelMod_bcphc_names <- lapply(nullmodelMod_bcphc_names, function(x) {colnames(x) <- colnames(new_net_bcphc_matrix); x })
+    # make list of graphs from list of adjacency matrices
+    nullmodelMod_bcphc_graphs <- lapply(nullmodelMod_bcphc_names, graph_from_adjacency_matrix)
+    # calculate Weisfeiler-Lehmann kernel
+    nullmodelMod_bcphc_spk <- CalculateWLKernel(nullmodelMod_bcphc_graphs,5)
+    # normalise to healthy structure
+    nullmodelMod_bcphc_spk <- nullmodelMod_bcphc_spk / my_K_bcphc_df2[1,1]
     
+    # get zscore and p value between original and random network structures
+    bcphc_mod_zscore_spk <- net.metric.zscore(my_K_bcphc_df3[1,3], nullmodelMod_bcphc_spk)
+    bcphc_mod_pvalue_spk <- net.metric.pvalue(bcphc_mod_zscore_spk)
+    # make dataframe
+    nullmodelMod_stats_spk_bcphc <- data.frame(cbind(bcphc_mod_zscore_spk, bcphc_mod_pvalue_spk))
+    # add meta data 
+    nullmodelMod_stats_spk_bcphc$normlisation <- "BCPHC"
+    nullmodelMod_stats_spk_bcphc$seed <- i
+    nullmodelMod_stats_spk_bcphc$n_nodes <- n_nodes
+    nullmodelMod_stats_spk_bcphc$index <- "Weisfeiler_Lehmann"
+    # re-name columns
+    colnames(nullmodelMod_stats_spk_bcphc) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    # remove row names
+    rownames(nullmodelMod_stats_spk_bcphc) <- NULL
+        
     # export kernel output and bind with empty global variable (defined above)
     netwerk_kernel_randomWalk_bcphc <- rbind(netwerk_kernel_randomWalk_bcphc, data.frame(i, n_nodes, my_K_bcphc_df))
     network_kernel_shortestPath_bcphc <- rbind(network_kernel_shortestPath_bcphc, data.frame(i, n_nodes, my_K_bcphc_df2))
     network_kernel_WL_bcphc <- rbind(network_kernel_WL_bcphc, data.frame(i, n_nodes, my_K_bcphc_df3))
-    
+    network_nullmodel_bcphc <- rbind(network_nullmodel_bcphc, data.frame(rbind(nullmodelMod_stats_extinction_bcphc, nullmodelMod_stats_spk_bcphc)))
     
     # Frechet distance between network attack curves
     # convert healthy attack curve to matrix
@@ -1318,7 +1353,8 @@ for (i in random_seeds){
     eigen_cf_hrare_bcphc <- centr_eigen(new_cf_rare_net_bcphc)$centralization 
     # merge network statistics information
     network_statistics_bcphc <- rbind(network_statistics_bcphc, data.frame(i, n_nodes, degree_cf_hrare_bcphc, nNodes_cf_hrare_bcphc, nEdges_cf_hrare_bcphc, 
-                                                                           diameter_cf_hrare_bcphc,  density_cf_hrare_bcphc, trans_cf_hrare_bcphc, eigen_cf_hrare_bcphc))
+                                                                           diameter_cf_hrare_bcphc,  density_cf_hrare_bcphc, 
+                                                                           trans_cf_hrare_bcphc, eigen_cf_hrare_bcphc))
     
     
     # continue with RLE-normalised data
@@ -1344,11 +1380,35 @@ for (i in random_seeds){
     new_cf_rare_edges_rle <- data.frame(rbind(h_net_subset_for_cf_rare_rle_df_edges, cf_rare_net_rle_df_edges))
     # keep only unique rows from a data frame
     new_cf_rare_edges_rle <- distinct(new_cf_rare_edges_rle)
+    
     # make a new graph from dataframe of modulated CF structure
-    new_cf_rare_net_rle <- graph_from_data_frame(new_cf_rare_edges_rle, 
-                                                 directed=directed_network, vertices=new_cf_rare_nodes_rle)
+    new_cf_rare_net_rle <- graph_from_data_frame(new_cf_rare_edges_rle, directed=directed_network, vertices=new_cf_rare_nodes_rle)
+    
+    # null model
+    new_net_rle_asdj <- as_adjacency_matrix(new_cf_rare_net_rle, type="both")
+    new_net_rle_matrix <- as.matrix(new_net_rle_asdj)
+    # Calculate network metric extinction slope
+    originalMod_net_rle_extinction <- networklevel(new_net_rle_matrix, index = "extinction slope", extinctmethod='degree')
+    originalMod_net_rle_extinction <- originalMod_net_rle_extinction[2]
+    # make null model
+    nullmodelMod_rle <- nullmodel(new_net_rle_matrix, N=nullmodel_networks_n, method=nullmodel_method)
+    nullmodelMod_rle_extinction <- unlist(sapply(nullmodelMod_rle, networklevel, index = 'extinction slope', extinctmethod='degree'))
+    nullmodelMod_rle_extinction <- nullmodelMod_rle_extinction[2,]
+    # get zscore and p value between original and random network structures
+    rle_mod_zscore <- net.metric.zscore(originalMod_net_rle_extinction, nullmodelMod_rle_extinction)
+    rle_mod_pvalue <- net.metric.pvalue(rle_mod_zscore)
+    # generate final data frame
+    nullmodelMod_stats_extinction_rle <- data.frame(cbind(rle_mod_zscore, rle_mod_pvalue))
+    nullmodelMod_stats_extinction_rle$normlisation <- "RLE"
+    nullmodelMod_stats_extinction_rle$seed <- i
+    nullmodelMod_stats_extinction_rle$n_nodes <- n_nodes
+    nullmodelMod_stats_extinction_rle$index <- "Robustness"
+    colnames(nullmodelMod_stats_extinction_rle) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    rownames(nullmodelMod_stats_extinction_rle) <- NULL
+    
+    
     # assesses networks vulnerability due to targeted attacks with 10 iterations for assessing random error
-    new_cf_net_attack_rare_rle <- swan_combinatory(new_cf_rare_net_rle,10)
+    new_cf_net_attack_rare_rle <- swan_combinatory(new_cf_rare_net_rle, 10)
     # convert to data frame
     new_cf_net_attack_rare_rle <- data.frame(new_cf_net_attack_rare_rle)
     # rename column names
@@ -1402,9 +1462,9 @@ for (i in random_seeds){
     # calculate Weisfeiler-Lehmann kernel
     my_K3_rle <- CalculateWLKernel(my_list1_rle, 5)
     # convert to data frame
-    my_K_rle_df3 <- data.frame(my_K3_rle)
+    my_K_rle_df2 <- data.frame(my_K3_rle)
     # normalise to healthy structure
-    my_K_rle_df3 <- my_K_rle_df3 / 	my_K_rle_df3[1,1]
+    my_K_rle_df3 <- my_K_rle_df2 / 	my_K_rle_df2[1,1]
     # rename columns
     colnames(my_K_rle_df3) <- c("Healthy", "CF", "modulated CF")
     # rename rows
@@ -1412,11 +1472,37 @@ for (i in random_seeds){
     # keep first row
     my_K_rle_df3 <- my_K_rle_df3[1,]
     
+    # re-set row names
+    nullmodelMod_rle_names <- lapply(nullmodelMod_rle, function(x) {rownames(x) <- rownames(new_net_rle_matrix); x })
+    # re-set column names
+    nullmodelMod_rle_names <- lapply(nullmodelMod_rle_names, function(x) {colnames(x) <- colnames(new_net_rle_matrix); x })
+    # make list of graphs from list of adjacency matrices
+    nullmodelMod_rle_graphs <- lapply(nullmodelMod_rle_names, graph_from_adjacency_matrix)
+    # calculate Weisfeiler-Lehmann kernel
+    nullmodelMod_rle_spk <- CalculateWLKernel(nullmodelMod_rle_graphs,5)
+    # normalise to healthy structure
+    nullmodelMod_rle_spk <- nullmodelMod_rle_spk / my_K_rle_df2[1,1]
+    
+    # get zscore and p value between original and random network structures
+    rle_mod_zscore_spk <- net.metric.zscore(my_K_rle_df3[1,3], nullmodelMod_rle_spk)
+    rle_mod_pvalue_spk <- net.metric.pvalue(rle_mod_zscore_spk)
+    # make dataframe
+    nullmodelMod_stats_spk_rle <- data.frame(cbind(rle_mod_zscore_spk, rle_mod_pvalue_spk))
+    # add meta data 
+    nullmodelMod_stats_spk_rle$normlisation <- "RLE"
+    nullmodelMod_stats_spk_rle$seed <- i
+    nullmodelMod_stats_spk_rle$n_nodes <- n_nodes
+    nullmodelMod_stats_spk_rle$index <- "Weisfeiler_Lehmann"
+    # re-name columns
+    colnames(nullmodelMod_stats_spk_rle) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    # remove row names
+    rownames(nullmodelMod_stats_spk_rle) <- NULL
+    
     # export kernel output and bind with empty global variable (defined above)
     netwerk_kernel_randomWalk_rle <- rbind(netwerk_kernel_randomWalk_rle, data.frame(i, n_nodes, my_K_rle_df))
     network_kernel_shortestPath_rle <- rbind(network_kernel_shortestPath_rle, data.frame(i, n_nodes, my_K_rle_df2))
     network_kernel_WL_rle <- rbind(network_kernel_WL_rle, data.frame(i, n_nodes, my_K_rle_df3))
-    
+    network_nullmodel_rle <- rbind(network_nullmodel_rle, data.frame(rbind(nullmodelMod_stats_extinction_rle, nullmodelMod_stats_spk_rle)))
     
     # Frechet distance between network attack curves
     # convert healthy attack curve to matrix
@@ -1472,8 +1558,33 @@ for (i in random_seeds){
     new_cf_rare_edges_vst <- data.frame(rbind(h_net_subset_for_cf_rare_vst_df_edges, cf_rare_net_vst_df_edges))
     # keep only unique rows from a data frame
     new_cf_rare_edges_vst <- distinct(new_cf_rare_edges_vst)
+    
     # make a new graph from dataframe of modulated CF structure
     new_cf_rare_net_vst <- graph_from_data_frame(new_cf_rare_edges_vst, directed=directed_network, vertices=new_cf_rare_nodes_vst)
+    
+    # null model
+    new_net_vst_asdj <- as_adjacency_matrix(new_cf_rare_net_vst, type="both")
+    new_net_vst_matrix <- as.matrix(new_net_vst_asdj)
+    # Calculate network metric extinction slope
+    originalMod_net_vst_extinction <- networklevel(new_net_vst_matrix, index = "extinction slope", extinctmethod='degree')
+    originalMod_net_vst_extinction <- originalMod_net_vst_extinction[2]
+    # make null model
+    nullmodelMod_vst <- nullmodel(new_net_vst_matrix, N=nullmodel_networks_n, method=nullmodel_method)
+    nullmodelMod_vst_extinction <- unlist(sapply(nullmodelMod_vst, networklevel, index = 'extinction slope', extinctmethod='degree')) 
+    nullmodelMod_vst_extinction <- nullmodelMod_vst_extinction[2,]
+    # get zscore and p value between original and random network structures
+    vst_mod_zscore <- net.metric.zscore(originalMod_net_vst_extinction, nullmodelMod_vst_extinction)
+    vst_mod_pvalue <- net.metric.pvalue(vst_mod_zscore)
+    # generate final data frame
+    nullmodelMod_stats_extinction_vst <- data.frame(cbind(vst_mod_zscore, vst_mod_pvalue))
+    nullmodelMod_stats_extinction_vst$normlisation <- "VST"
+    nullmodelMod_stats_extinction_vst$seed <- i
+    nullmodelMod_stats_extinction_vst$n_nodes <- n_nodes
+    nullmodelMod_stats_extinction_vst$index <- "Robustness"
+    colnames(nullmodelMod_stats_extinction_vst) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    rownames(nullmodelMod_stats_extinction_vst) <- NULL
+    
+    
     # assesses networks vulnerability due to targeted attacks with 10 iterations for assessing random error
     new_cf_net_attack_rare_vst <- swan_combinatory(new_cf_rare_net_vst,10)
     # convert to data frame
@@ -1530,9 +1641,9 @@ for (i in random_seeds){
     # calculate Weisfeiler-Lehmann kernel
     my_K3_vst <- CalculateWLKernel(my_list1_vst, 5)
     # convert to data frame
-    my_K_vst_df3 <- data.frame(my_K3_vst)
+    my_K_vst_df2 <- data.frame(my_K3_vst)
     # normalise to healthy structure
-    my_K_vst_df3 <- my_K_vst_df3 / 	my_K_vst_df3[1,1]
+    my_K_vst_df3 <- my_K_vst_df2 / 	my_K_vst_df2[1,1]
     # rename columns
     colnames(my_K_vst_df3) <- c("Healthy", "CF", "modulated CF")
     # rename rows
@@ -1540,11 +1651,37 @@ for (i in random_seeds){
     # keep first row
     my_K_vst_df3 <- my_K_vst_df3[1,]
     
+    # re-set row names
+    nullmodelMod_vst_names <- lapply(nullmodelMod_vst, function(x) {rownames(x) <- rownames(new_net_vst_matrix); x })
+    # re-set column names
+    nullmodelMod_vst_names <- lapply(nullmodelMod_vst_names, function(x) {colnames(x) <- colnames(new_net_vst_matrix); x })
+    # make list of graphs from list of adjacency matrices
+    nullmodelMod_vst_graphs <- lapply(nullmodelMod_vst_names, graph_from_adjacency_matrix)
+    # calculate Weisfeiler-Lehmann kernel
+    nullmodelMod_vst_spk <- CalculateWLKernel(nullmodelMod_vst_graphs,5)
+    # normalise to healthy structure
+    nullmodelMod_vst_spk <- nullmodelMod_vst_spk / my_K_vst_df2[1,1]
+    
+    # get zscore and p value between original and random network structures
+    vst_mod_zscore_spk <- net.metric.zscore(my_K_vst_df3[1,3], nullmodelMod_vst_spk)
+    vst_mod_pvalue_spk <- net.metric.pvalue(vst_mod_zscore_spk)
+    # make dataframe
+    nullmodelMod_stats_spk_vst <- data.frame(cbind(vst_mod_zscore_spk, vst_mod_pvalue_spk))
+    # add meta data 
+    nullmodelMod_stats_spk_vst$normlisation <- "VST"
+    nullmodelMod_stats_spk_vst$seed <- i
+    nullmodelMod_stats_spk_vst$n_nodes <- n_nodes
+    nullmodelMod_stats_spk_vst$index <- "Weisfeiler_Lehmann"
+    # re-name columns
+    colnames(nullmodelMod_stats_spk_vst) <- c("zscore", "p-value", "normalisation", "seed", "n_nodes", "index")
+    # remove row names
+    rownames(nullmodelMod_stats_spk_vst) <- NULL
+    
     # export kernel output and bind with empty global variable (defined above)
     netwerk_kernel_randomWalk_vst <- rbind(netwerk_kernel_randomWalk_vst, data.frame(i, n_nodes, my_K_vst_df))
     network_kernel_shortestPath_vst <- rbind(network_kernel_shortestPath_vst, data.frame(i, n_nodes, my_K_vst_df2))
     network_kernel_WL_vst <- rbind(network_kernel_WL_vst, data.frame(i, n_nodes, my_K_vst_df3))
-    
+    network_nullmodel_vst <- rbind(network_nullmodel_vst, data.frame(rbind(nullmodelMod_stats_extinction_vst, nullmodelMod_stats_spk_vst)))
     
     # Frechet distance between network attack curves
     # convert healthy attack curve to matrix
@@ -1578,6 +1715,7 @@ for (i in random_seeds){
   }
 }
 
+
 ############################################################################################################
 # Evaluation of attack curve simulations and Frechet distances
 # BCPHC-normalised data
@@ -1596,7 +1734,9 @@ frechet_attack_similarity_bcphc_maximum <- ddply(frechet_attack_similarity_bcphc
 # rename columns
 colnames(frechet_attack_similarity_bcphc_maximum) <- c("n_nodes_max", "i_max","cf_hrare_deg_frechet_max")
 # bind information into one data frame
-frechet_attack_similartiy_degree <- data.frame(cbind(frechet_attack_similarity_bcphc_median, frechet_attack_similarity_bcphc_minimum, frechet_attack_similarity_bcphc_maximum))
+frechet_attack_similartiy_degree <- data.frame(cbind(frechet_attack_similarity_bcphc_median, 
+                                                     frechet_attack_similarity_bcphc_minimum, 
+                                                     frechet_attack_similarity_bcphc_maximum))
 
 
 # RLE-normalised data
@@ -1615,7 +1755,9 @@ frechet_attack_similarity_rle_maximum <- ddply(frechet_attack_similarity_rle,"n_
 # rename columns
 colnames(frechet_attack_similarity_rle_maximum) <- c("n_nodes_max", "i_max","cf_hrare_deg_frechet_max")
 # bind information into one data frame
-frechet_attack_similartiy_degree_rle <- data.frame(cbind(frechet_attack_similarity_rle_median, frechet_attack_similarity_rle_minimum, frechet_attack_similarity_rle_maximum))
+frechet_attack_similartiy_degree_rle <- data.frame(cbind(frechet_attack_similarity_rle_median, 
+                                                         frechet_attack_similarity_rle_minimum, 
+                                                         frechet_attack_similarity_rle_maximum))
 
 
 # VST-normalised data
@@ -1634,7 +1776,11 @@ frechet_attack_similarity_vst_maximum <- ddply(frechet_attack_similarity_vst,"n_
 # rename columns
 colnames(frechet_attack_similarity_vst_maximum) <- c("n_nodes_max", "i_max","cf_hrare_deg_frechet_max")
 # bind information into one data frame
-frechet_attack_similartiy_degree_vst <- data.frame(cbind(frechet_attack_similarity_vst_median,frechet_attack_similarity_vst_minimum, frechet_attack_similarity_vst_maximum))
+frechet_attack_similartiy_degree_vst <- data.frame(cbind(frechet_attack_similarity_vst_median,
+                                                         frechet_attack_similarity_vst_minimum, 
+                                                         frechet_attack_similarity_vst_maximum))
+
+
 # rename column names for all normalisation strategies so that they are matching
 colnames(frechet_attack_similarity_vst) <- c("i", "n_nodes", "frechet")
 colnames(frechet_attack_similarity_rle) <- c("i", "n_nodes", "frechet")
@@ -1644,13 +1790,17 @@ frechet_attack_similarity_vst$normalisation <- "VST"
 frechet_attack_similarity_bcphc$normalisation <- "BCPHC"
 frechet_attack_similarity_rle$normalisation <- "RLE"
 # bind all data frames into one
-frechet_attack_similarity <- data.frame(rbind(frechet_attack_similarity_vst, frechet_attack_similarity_rle, frechet_attack_similarity_bcphc))
+frechet_attack_similarity <- data.frame(rbind(frechet_attack_similarity_vst, 
+                                              frechet_attack_similarity_rle, 
+                                              frechet_attack_similarity_bcphc))
 # add meta data
 frechet_attack_similartiy_degree_vst$normalisation <- "VST"
 frechet_attack_similartiy_degree$normalisation <- "BCPHC"
 frechet_attack_similartiy_degree_rle$normalisation <- "RLE"
 # bind data frames into one
-frechet_attack_df <- data.frame(rbind(frechet_attack_similartiy_degree_vst, frechet_attack_similartiy_degree, frechet_attack_similartiy_degree_rle))
+frechet_attack_df <- data.frame(rbind(frechet_attack_similartiy_degree_vst, 
+                                      frechet_attack_similartiy_degree, 
+                                      frechet_attack_similartiy_degree_rle))
 
 ############################################################################################################
 # Kernel-based evaluation of simulation runs
@@ -1816,13 +1966,10 @@ kernel_WL_df_bcphc$normalisation <- "BCPHC"
 # merge VST, BCPHC, RLE-normalised data frames
 kernel_WL_df <- data.frame(rbind(kernel_WL_df_vst, kernel_WL_df_rle, kernel_WL_df_bcphc))
 
-
-
 network_kernel_shortestPath_vst$normalisation <- "VST"
 network_kernel_shortestPath_bcphc$normalisation <- "BCPHC"
 network_kernel_shortestPath_rle$normalisation <- "RLE"
 network_kernel_shortestPath <- data.frame(rbind(network_kernel_shortestPath_vst, network_kernel_shortestPath_rle, network_kernel_shortestPath_bcphc))
-
 
 kernel_shortestPahway_df_vst$normalisation <- "VST"
 kernel_shortestPahway_df_rle$normalisation <- "RLE"
@@ -1833,78 +1980,30 @@ kernel_shortestPathway_df <- data.frame(rbind(kernel_shortestPahway_df_vst, kern
 # generate simulation plots
 # Weisfeiler-Lehman plot
 kernel_WL_plot <-ggplot() + 
-  geom_jitter(data=network_kernel_WL,
-              aes(x=n_nodes, y=modulated.CF, shape=normalisation), 
-              colour="grey", width = 0.3, alpha=0.5, size=0.8) +
-  geom_pointrange(data=kernel_WL_df,
-                  aes(x=n_nodes_med, y=CF_modulated_med_2, 
-                      ymin=CF_modulated_min_2, 
-                      ymax=CF_modulated_max_2, 
-                      color=normalisation)) +
-  geom_line(data=kernel_WL_df,
-            aes(x=n_nodes_med, y=CF_modulated_med_2, color=normalisation), 
-            size=1, alpha=0.5) +
-  geom_line(data=kernel_WL_df,
-            aes(x=n_nodes_med, y=CF_med_2, color=normalisation), 
-            size=1, alpha=1, linetype="dotted") +
+  geom_jitter(data=network_kernel_WL, aes(x=n_nodes, y=modulated.CF, shape=normalisation), colour="grey", width = 0.3, alpha=0.5, size=0.8) +
+  geom_pointrange(data=kernel_WL_df, aes(x=n_nodes_med, y=CF_modulated_med_2, ymin=CF_modulated_min_2, ymax=CF_modulated_max_2, color=normalisation)) +
+  geom_line(data=kernel_WL_df, aes(x=n_nodes_med, y=CF_modulated_med_2, color=normalisation), size=1, alpha=0.5) +
+  geom_line(data=kernel_WL_df, aes(x=n_nodes_med, y=CF_med_2, color=normalisation), size=1, alpha=1, linetype="dotted") +
   xlab("Number of nodes") + 
   scale_y_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8), limits=c(0.0, 0.9)) + 
-  scale_colour_manual(values=c("black", "darkgreen", "blue")) + theme_bw(base_size=10) +
-  theme(legend.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.title = element_text(size=9)) +
-  ylab("Weisfeiler-Lehman kernel") 
-
-# Shortest path kernel
-kernel_SP_plot <-ggplot() + 
-  geom_jitter(data=network_kernel_shortestPath,
-              aes(x=n_nodes, y=modulated.CF, shape=normalisation), 
-              colour="grey", width = 0.3, alpha=0.5, size=0.8) +
-  geom_pointrange(data=kernel_shortestPathway_df,
-                  aes(x=n_nodes_med, y=CF_modulated_med_2, 
-                      ymin=CF_modulated_min_2, 
-                      ymax=CF_modulated_max_2, 
-                      color=normalisation)) +
-  geom_line(data=kernel_shortestPathway_df,
-            aes(x=n_nodes_med, y=CF_modulated_med_2, color=normalisation), 
-            size=1, alpha=0.5) +
-  geom_line(data=kernel_shortestPathway_df,
-            aes(x=n_nodes_med, y=CF_med_2, color=normalisation), 
-            size=1, alpha=1, linetype="dotted") +
-  xlab("Number of nodes") + 
-  scale_y_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8), limits=c(0.0, 0.9)) + 
-  scale_colour_manual(values=c("black", "darkgreen", "blue")) + theme_bw(base_size=10) +
-  theme(legend.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.title = element_text(size=9)) +
-  ylab("Shortest pathway kernel") 
+  scale_colour_manual(values=c("black", "red", "dodgerblue4")) + theme_bw(base_size=10) +
+  theme(legend.title = element_blank(), panel.grid = element_blank(), axis.text = element_text(size=11), 
+        axis.title = element_text(size=11), legend.text = element_text(size=11)) +
+  ylab("1-dim Weisfeiler-Lehman kernel") 
 
 # Frechet distance plot
 frechet_plot <- ggplot() + 
-  geom_jitter(data=frechet_attack_similarity, aes(x=n_nodes, y=frechet, shape=normalisation), 
-              color="grey", width = 0.3, alpha=0.5, size=0.8) +
-  geom_pointrange(data=frechet_attack_df,
-                  aes(x=n_nodes_med, y=cf_hrare_deg_frechet_med, 
-                      ymin=cf_hrare_deg_frechet_min,
-                      ymax=cf_hrare_deg_frechet_max,
-                      color=normalisation)) +
-  geom_line(data=frechet_attack_df,
-            aes(x=n_nodes_med, y=cf_hrare_deg_frechet_med, color=normalisation), 
-            size=1, alpha=0.5) +
-  geom_line(data=frechet_attack_df,
-            aes(x=n_nodes_med, y=round(cf_vs_healthy_degree,2), color=normalisation), 
-            size=1, alpha=1, linetype="dotted") +
+  geom_jitter(data=frechet_attack_similarity, aes(x=n_nodes, y=frechet_2, shape=normalisation), color="grey", width = 0.3, alpha=0.5, size=0.8) +
+  geom_pointrange(data=frechet_attack_df, aes(x=n_nodes_med, y=cf_hrare_deg_frechet_med_2, ymin=cf_hrare_deg_frechet_min_2, ymax=cf_hrare_deg_frechet_max_2, color=normalisation)) +
+  geom_line(data=frechet_attack_df, aes(x=n_nodes_med, y=cf_hrare_deg_frechet_med_2, color=normalisation), size=1, alpha=0.5) +
+  geom_line(data=frechet_attack_df, aes(x=n_nodes_med, y=round(cf_vs_healthy_degree,2), color=normalisation), size=1, alpha=1, linetype="dotted") +
   xlab("Number of nodes") + 
-  scale_y_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8), limits=c(0.0, 0.9)) + 
-  scale_colour_manual(values=c("black", "darkgreen", "blue")) + theme_bw(base_size=10) +
-  theme(legend.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.title = element_text(size=9)) +
+  scale_y_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8), limits=c(0.0, 0.5)) + 
+  scale_colour_manual(values=c("black", "red", "dodgerblue4")) + 
+  theme_bw() +
+  theme(legend.title = element_blank(), panel.grid = element_blank(), legend.position = c(0.8,0.8), axis.text = element_text(size=11), 
+        axis.title = element_text(size=11), legend.text = element_text(size=11)) +
   ylab("Network vulnerability") 
-
-# combine simulation plots
-simulation_plots <- ggarrange(kernel_WL_plot, kernel_SP_plot, frechet_plot, common.legend = TRUE, 
-                              nrow=1, labels = c("A", "B", "C"), font.label = list(size = 9, color = "black"))
 
 ############################################################################################################
 # Obtain correlation statistics
@@ -1919,16 +2018,6 @@ spearman.ci(network_kernel_WL_bcphc$modulated.CF, network_kernel_WL_bcphc$n_node
 cor.test(network_kernel_WL_rle$modulated.CF, network_kernel_WL_rle$n_nodes, method = "spearman")
 spearman.ci(network_kernel_WL_rle$modulated.CF, network_kernel_WL_rle$n_nodes, nrep=1000)
 
-# Shortest path graph kernel of modulated CF network and number of nodes
-# BCPHC-normalised data
-cor.test(network_kernel_shortestPath_bcphc$modulated.CF, network_kernel_shortestPath_bcphc$n_nodes, method = "spearman")
-spearman.ci(network_kernel_shortestPath_bcphc$modulated.CF, network_kernel_shortestPath_bcphc$n_nodes, nrep=1000)
-# VST-normalised data
-cor.test(network_kernel_shortestPath_vst$modulated.CF, network_kernel_shortestPath_vst$n_nodes, method = "spearman")
-spearman.ci(network_kernel_shortestPath_vst$modulated.CF, network_kernel_shortestPath_vst$n_nodes, nrep=1000)
-# RLE-normalised data
-cor.test(network_kernel_shortestPath_rle$modulated.CF, network_kernel_shortestPath_rle$n_nodes, method = "spearman")
-spearman.ci(network_kernel_shortestPath_rle$modulated.CF, network_kernel_shortestPath_rle$n_nodes, nrep=1000)
 
 # Frechet distance of modulated CF network to healthy network and number of nodes
 # VST-normalised data
@@ -1961,37 +2050,105 @@ info_vst <- selected_species_vst %>% right_join(frechet_attack_similarity_vst, b
 # add meta data
 info_vst$normalisation <- "VST"
 
-# join information of all three normalisation strategies (VST, RLE and BCPHC)
-info_all <- data.frame(rbind(info_vst, info_bcphc, info_rle))
+info_all <- data.frame(rbind(info_bcphc, info_rle, info_vst))
 
 # add outcome column, if Frechet distance between modulated CF network and original healthy network is smaller than distance between
 # original CF network and original healthy network, add "improved" otherwise add "worse"
 info_all$Outcome <- 
   with(info_all, 
-       ifelse(normalisation == "BCPHC" & frechet > original_frechet_h_cf_degree_bcphc, "Worse", 
-              ifelse(normalisation == "BCPHC" & frechet < original_frechet_h_cf_degree_bcphc, "Improved", 
-                     ifelse(normalisation == "RLE" & frechet > original_frechet_h_cf_degree_rle, "Worse", 
-                            ifelse(normalisation == "RLE" & frechet < original_frechet_h_cf_degree_rle, "Improved",
-                                   ifelse(normalisation == "VST" & frechet > original_frechet_h_cf_degree_vst, "Worse",
-                                          ifelse(normalisation == "VST" & frechet < original_frechet_h_cf_degree_vst, "Improved", "unknown")))))))
-# count number of worse and improved occurrences per node, species and normalisation strategy
-table_outcome_name <- as.data.frame(table(info_all$Outcome, info_all$name, info_all$n_nodes, info_all$normalisation))
-# subset and extract all runs that improved the CF outcome
-table_outcome_name_improved <- subset(table_outcome_name, Var1 == "Improved")
-# convert frequency to percentage
-table_outcome_name_improved$Per <- (table_outcome_name_improved$Freq / sum(table_outcome_name_improved$Freq)) * 100
-# subset and extract all runs that destabilized the CF outcome
-table_outcome_name_worse <- subset(table_outcome_name, Var1 == "Worse")
-# convert frequency to percentage
-table_outcome_name_worse$Per <- (table_outcome_name_worse$Freq / sum(table_outcome_name_worse$Freq)) * 100
+       ifelse(normalisation == "BCPHC" & frechet > original_frechet_h_cf_degree_bcphc, "Destabilisation", 
+              ifelse(normalisation == "BCPHC" & frechet < original_frechet_h_cf_degree_bcphc, "Stabilisation", 
+                     ifelse(normalisation == "RLE" & frechet > original_frechet_h_cf_degree_rle, "Destabilisation", 
+                            ifelse(normalisation == "RLE" & frechet < original_frechet_h_cf_degree_rle, "Stabilisation",
+                                   ifelse(normalisation == "VST" & frechet > original_frechet_h_cf_degree_vst, "Destabilisation",
+                                          ifelse(normalisation == "VST" & frechet < original_frechet_h_cf_degree_vst, "Stabilisation", "Destabilisation")))))))
 
-# bind improved and worse output tables
-table_outcome <- data.frame(rbind(table_outcome_name_worse, table_outcome_name_improved))
-# convert count table from character to numeric object
-table_outcome$Var3 <- as.numeric(as.character(table_outcome$Var3))
-# scale the percentage column
-table_outcome$Per_scale <- rescale(table_outcome$Per, to=c(-2,2))
+network_nullmodels <- data.frame(rbind(network_nullmodel_bcphc, network_nullmodel_rle, network_nullmodel_vst))
+colnames(network_nullmodels) <- c("zscore", "p.value", "normalisation", "i", "n_nodes", "index" )
 
+# generate data table with robustness information
+network_nullmodels_robustness <- subset(network_nullmodels, index == "Robustness")
+# combine data frames
+network_nullmodels_robustness_1 <- network_nullmodels_robustness %>% right_join(info_all, by=c("i","n_nodes", "normalisation"))
+# remove NA entries
+network_nullmodels_robustness_2 <- na.omit(network_nullmodels_robustness_1)
+
+# add columns based on p-value
+network_nullmodels_robustness_2$p.value.cat <- ifelse(network_nullmodels_robustness_2$p.value >= 0.05, "p-value >= 0.05", "p-value < 0.05")
+network_nullmodels_robustness_2$p.value.cat.normalisation <- paste(network_nullmodels_robustness_2$p.value.cat,";",network_nullmodels_robustness_2$normalisation)
+network_nullmodels_robustness_2$p.value.cat.normalisation <- str_replace(network_nullmodels_robustness_2$p.value.cat.normalisation, " ;", ";")
+network_nullmodels_robustness_2$p.value.size <- ifelse(network_nullmodels_robustness_2$p.value > 0.05, "not significant", "significant")
+
+ # plot null model results based on robustness score
+nullmodel_robustness <-
+  ggplot(network_nullmodels_robustness_2) +
+  geom_hline(yintercept = -1.96, linetype="dashed") +
+  geom_hline(yintercept = 1.96, linetype="dashed") + 
+  ylim(-30, 20) +
+  geom_jitter(aes(x=n_nodes, y=zscore, colour=p.value.cat.normalisation, shape=p.value.cat.normalisation, size=p.value.size), alpha=0.4,width=1, height = 1) +
+  facet_wrap(~Outcome, nrow=1) + theme_bw() + 
+  xlab("Number of nodes") + ylab("Z-score (Null model)") +
+  scale_colour_manual(values=c("black", "red", "dodgerblue4", "black", "red", "dodgerblue4"),
+                      name = "Normalisation",
+                      labels = c("p-value < 0.05; BCPHC", "p-value < 0.05; RLE", "p-value < 0.05; VST",
+                                 "p-value > 0.05; BCPHC", "p-value > 0.05; RLE", "p-value > 0.05; VST")) +
+  scale_shape_manual(values=c(19,19,19,17,17,17),
+                     name = "Normalisation",
+                     labels = c("p-value < 0.05; BCPHC", "p-value < 0.05; RLE", "p-value < 0.05; VST",
+                                "p-value > 0.05; BCPHC", "p-value > 0.05; RLE", "p-value > 0.05; VST")) +
+  scale_size_manual(values=c(1, 0.001), guide = "none") +
+  scale_x_continuous(breaks = c(1,5,10,15,20), labels = c(1,5,10,15,20), limits = c(0,22)) + 
+  guides(colour = guide_legend(override.as = list(alpha=1, size=3))) + 
+  theme(panel.grid = element_blank(), legend.position = "none", strip.background = element_rect(fill="white"), strip.text = element_text(size=11), axis.text = element_text(size=11), axis.title = element_text(size=11), legend.text = element_text(size=11), legend.title = element_blank()) 
+
+ 
+# generate data table with Weisfeiler Lehmann information
+network_nullmodels_wlk <- subset(network_nullmodels, index == "Weisfeiler_Lehmann")
+# combine data frames
+new_figure_LW <- data.frame(rbind(network_kernel_WL_bcphc, network_kernel_WL_rle, network_kernel_WL_vst))
+# remove row-names
+rownames(new_figure_LW) <- NULL
+# make character entries numeric
+new_figure_LW$CF <- as.numeric(new_figure_LW$CF)
+new_figure_LW$modulated.CF <- as.numeric(new_figure_LW$modulated.CF)
+new_figure_LW$outcome <- ifelse(new_figure_LW$CF < new_figure_LW$modulated.CF, "Improvement", "Disimprovement")
+# join dataframe
+network_nullmodels_wlk_2 <- network_nullmodels_wlk %>% right_join(new_figure_LW, by=c("i","n_nodes", "normalisation"))
+# remove NA values
+network_nullmodels_wlk_2 <- na.omit(network_nullmodels_wlk_2)
+# add columns based on p-value
+network_nullmodels_wlk_2$p.value.cat <- ifelse(network_nullmodels_wlk_2$p.value >= 0.05, "p-value >= 0.05", "p-value < 0.05")
+network_nullmodels_wlk_2$p.value.cat.normalisation <- paste(network_nullmodels_wlk_2$p.value.cat,network_nullmodels_wlk_2$normalisation)
+network_nullmodels_wlk_2$p.value.size <- ifelse(network_nullmodels_wlk_2$p.value > 0.05, 0.35, 0.1)
+
+# plot null model results based on topology score
+nullmodel_wlk <- 
+  ggplot(network_nullmodels_wlk_2) +
+  geom_hline(yintercept = -1.96, linetype="dashed") +
+  geom_hline(yintercept = 1.96, linetype="dashed") + 
+  ylim(-10, 80) +
+  geom_jitter(aes(x=n_nodes, y=zscore, colour=p.value.cat.normalisation, shape=p.value.cat.normalisation), size=0.01, alpha=0.5,width=1, height=0.5) + # size = 0.3
+  facet_wrap(~outcome, nrow=1) + theme_bw() + 
+  xlab("Number of nodes") + ylab("Z-score (Null model)") +
+  scale_colour_manual(values=c("black", "red", "dodgerblue4", "black", "red", "dodgerblue4"),
+                      name = "Normalisation",
+                      labels = c("p-value < 0.05; BCPHC", "p-value < 0.05; RLE", "p-value < 0.05; VST",
+                                 "p-value > 0.05; BCPHC", "p-value > 0.05; RLE", "p-value > 0.05; VST")) +
+  scale_shape_manual(values=c(19,19,19,17,17,17),
+                     name = "Normalisation",
+                     labels = c("p-value < 0.05; BCPHC", "p-value < 0.05; RLE", "p-value < 0.05; VST",
+                                "p-value > 0.05; BCPHC", "p-value > 0.05; RLE", "p-value > 0.05; VST")) +
+  scale_x_continuous(breaks = c(1,5,10,15,20), labels = c(1,5,10,15,20), limits = c(0,22)) + scale_size(guide = "none") +
+  theme(panel.grid = element_blank(), legend.position = "none", strip.background = element_rect(fill="white"), strip.text = element_text(size=11), axis.text = element_text(size=11), axis.title = element_text(size=11), legend.text = element_text(size=11), legend.title = element_blank()) 
+
+# combine plots
+rob_lwk_plot <- ggarrange(frechet_plot, nullmodel_robustness, labels = c("A", "B"), nrow=1, widths = c(1,1))
+nullmodel_merged <- ggarrange(kernel_WL_plot, nullmodel_wlk, labels = c("C", "D"), legend = "none", nrow=1, widths = c(1,1))
+rob_lwk_nullmodel <- ggarrange(rob_lwk_plot, nullmodel_merged, nrow=2)
+
+#########################################################################################
+# remove networks, which were not significantly different from the random structures
+network_nullmodels_robustness_3 <- subset(network_nullmodels_robustness_2, p.value < 0.05 & zscore < 0)
 # obtain background rare species for all normalisation strategies
 background_rare <- c(background_rare_h_rle$Species, background_rare_h_bcphc$Species,background_rare_h_vst$Species)
 # remove duplicates
@@ -2000,313 +2157,140 @@ background_rare <- background_rare[!duplicated(background_rare)]
 background_core <- c(background_core_h_rle$Species, background_core_h_bcphc$Species,background_core_h_vst$Species)
 # remove duplicates
 background_core <- background_core[!duplicated(background_core)]
-# add core/rare information to count table
-table_outcome$species_type <- ifelse(table_outcome$Var2 %in% background_rare, "Rare", ifelse(table_outcome$Var2 %in% background_core, "Core", "Core"))
-# extract runs that improved modulated CF networks
-table_outcome_improved <- subset(table_outcome, Var1 == "Improved")
-# convert dataframe from long to wide format
-merge_hboth_wide <- spread(table_outcome, key="Var2", value="Freq")
-# remove percentage and scale columns
-merge_hboth_wide$Per <- NULL
-merge_hboth_wide$Per_scale <- NULL
-
-# extract runs that improved the network
-merge_hboth_wide_better <- subset(merge_hboth_wide, Var1 == "Improved")
-# set NAs to 0
-merge_hboth_wide_better[is.na(merge_hboth_wide_better)] <- 0
-# remove non-numeric species type (core, rare) column
-merge_hboth_wide_better$species_type <- NULL
-
-# subset and extract BCPHC-normalised data
-merge_hboth_wide_better_bcphc <- subset(merge_hboth_wide_better, Var4 == "BCPHC")
-# remove duplicate rows and sum those entries
-merge_hboth_wide_better_bcphc <- ddply(merge_hboth_wide_better_bcphc,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_better_bcphc) <- merge_hboth_wide_better_bcphc$Var3
-# remove column
-merge_hboth_wide_better_bcphc$Var3 <- NULL
-# generate data frame object
-merge_hboth_wide_better_bcphc <- data.frame(merge_hboth_wide_better_bcphc)
-# get alpha diversity indices
-hboth_better_fisher_bcphc <- vegan::fisher.alpha(merge_hboth_wide_better_bcphc)
-# Shannon diversity index
-hboth_better_shannon_bcphc <- vegan::diversity(merge_hboth_wide_better_bcphc, index = "shannon")
-# Species number
-hboth_better_specNum_bcphc <- vegan::specnumber(merge_hboth_wide_better_bcphc)
-# Simpson diversity index
-hboth_better_dominance_bcphc <- vegan::diversity(merge_hboth_wide_better_bcphc, index = "simpson")
-# Dominance indices
-hboth_better_BPindex_bcphc <- microbiome::dominance(t(merge_hboth_wide_better_bcphc))
-# store all indices in one data frame
-div_hboth_better_bcphc <- data.frame(cbind(hboth_better_fisher_bcphc, hboth_better_shannon_bcphc, hboth_better_specNum_bcphc, hboth_better_dominance_bcphc, 
-                                           hboth_better_BPindex_bcphc$gini))
-# rename columns
-colnames(div_hboth_better_bcphc) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add meta data
-div_hboth_better_bcphc$performance <- "Improved"
-div_hboth_better_bcphc$normalisation <- "BCPHC"
-
-
-# subset and extract RLE-normalised data
-merge_hboth_wide_better_rle <- subset(merge_hboth_wide_better, Var4 == "RLE")
-# remove duplicate rows and sum those entries
-merge_hboth_wide_better_rle <- ddply(merge_hboth_wide_better_rle,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_better_rle) <- merge_hboth_wide_better_rle$Var3
-# remove column
-merge_hboth_wide_better_rle$Var3 <- NULL
-# generate data frame object
-merge_hboth_wide_better_rle <- data.frame(merge_hboth_wide_better_rle)
-# get alpha diversity indices
-hboth_better_fisher_rle <- vegan::fisher.alpha(merge_hboth_wide_better_rle)
-# Shannon diversity index
-hboth_better_shannon_rle <- vegan::diversity(merge_hboth_wide_better_rle, index = "shannon")
-# Species number
-hboth_better_specNum_rle <- vegan::specnumber(merge_hboth_wide_better_rle)
-# Simpson diversity index
-hboth_better_dominance_rle <- vegan::diversity(merge_hboth_wide_better_rle, index = "simpson")
-# Dominance indices
-hboth_better_BPindex_rle <- microbiome::dominance(t(merge_hboth_wide_better_rle))
-# store all indices in one data frame
-div_hboth_better_rle <- data.frame(cbind(hboth_better_fisher_rle, hboth_better_shannon_rle, hboth_better_specNum_rle, hboth_better_dominance_rle, 
-                                         hboth_better_BPindex_rle$gini))
-# rename columns
-colnames(div_hboth_better_rle) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add meta data
-div_hboth_better_rle$performance <- "Improved"
-div_hboth_better_rle$normalisation <- "RLE"
-
-# subset and extract VST-normalised data
-merge_hboth_wide_better_vst <- subset(merge_hboth_wide_better, Var4 == "VST")
-# remove duplicate rows and sum those entries
-merge_hboth_wide_better_vst <- ddply(merge_hboth_wide_better_vst,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_better_vst) <- merge_hboth_wide_better_vst$Var3
-# remove column
-merge_hboth_wide_better_vst$Var3 <- NULL
-# generate data frame object
-merge_hboth_wide_better_vst <- data.frame(merge_hboth_wide_better_vst)
-# get alpha diversity indices
-hboth_better_fisher_vst <- vegan::fisher.alpha(merge_hboth_wide_better_vst)
-# Shannon diversity index
-hboth_better_shannon_vst <- vegan::diversity(merge_hboth_wide_better_vst, index = "shannon")
-# Species number
-hboth_better_specNum_vst <- vegan::specnumber(merge_hboth_wide_better_vst)
-# Simpson diversity index
-hboth_better_dominance_vst <- vegan::diversity(merge_hboth_wide_better_vst, index = "simpson")
-# Dominance indices
-hboth_better_BPindex_vst <- microbiome::dominance(t(merge_hboth_wide_better_vst))
-# store all indices in one data frame
-div_hboth_better_vst <- data.frame(cbind(hboth_better_fisher_vst, hboth_better_shannon_vst, 
-                                         hboth_better_specNum_vst, hboth_better_dominance_vst, 
-                                         hboth_better_BPindex_vst$gini))
-# rename columns
-colnames(div_hboth_better_vst) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add metadata 
-div_hboth_better_vst$performance <- "Improved"
-div_hboth_better_vst$normalisation <- "VST"
-
-# combine all normalisation outputs in one data frame
-div_hboth_better <- data.frame(rbind(div_hboth_better_bcphc,div_hboth_better_rle,div_hboth_better_vst))
-
-# extract runs that destabilised the network
-merge_hboth_wide_worse <- subset(merge_hboth_wide, Var1 == "Worse")
-
-# subset and extract BCPHC-normalised data
-merge_hboth_wide_worse_bcphc <- subset(merge_hboth_wide_worse, Var4 == "BCPHC")
-# set NAs to 0
-merge_hboth_wide_worse_bcphc[is.na(merge_hboth_wide_worse_bcphc)] <- 0
-# remove non-numeric species type (core, rare) column
-merge_hboth_wide_worse_bcphc$species_type <- NULL
-# remove duplicate rows and sum those entries
-merge_hboth_wide_worse_bcphc <- ddply(merge_hboth_wide_worse_bcphc,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_worse_bcphc) <- merge_hboth_wide_worse_bcphc$Var3
+# select variables 
+network_table <- select(network_nullmodels_robustness_3, name, frechet, i, n_nodes, Outcome)
+# generate new column with merged information
+network_table$seed_node <- paste(network_table$i,"_",network_table$n_nodes,"_",network_table$Outcome)
+# make data frame
+network_table_2 <- data.frame(table(network_table$name, network_table$Outcome, network_table$seed_node))
+# store data frame in new variable
+network_table_3 <- network_table_2
+# define species as "core" or "rare 
+network_table_3$species_type <- ifelse(network_table_3$Var1 %in% background_rare, "Rare", ifelse(network_table_3$Var1 %in% background_core, "Core", "Core"))
+# convert long data frame to format wide
+network_table_2_long <- spread(network_table_3, key=Var3, value=Freq)
+# store in new variable
+network_table_3_long <- network_table_2_long
+# make data frame with genus information
+network_table_3_genus <- network_table_3_long
+network_table_3_genus$Var1 <- as.character(network_table_3_genus$Var1)
+network_table_3_genus2 <- sapply(strsplit(network_table_3_genus$Var1," "), `[`, 1)
+network_table_3_genus$Genus <- network_table_3_genus2
 # remove columns
-merge_hboth_wide_worse_bcphc$Var3 <- NULL
-merge_hboth_wide_worse_bcphc$Var4 <- NULL
-# generate data frame object
-merge_hboth_wide_worse_bcphc <- data.frame(merge_hboth_wide_worse_bcphc)
-# get alpha diversity indices
-hboth_worse_fisher_bcphc <- vegan::fisher.alpha(merge_hboth_wide_worse_bcphc)
-# Shannon diversity index
-hboth_worse_shannon_bcphc <- vegan::diversity(merge_hboth_wide_worse_bcphc, index = "shannon")
-# Species number
-hboth_worse_specNum_bcphc <- vegan::specnumber(merge_hboth_wide_worse_bcphc)
-# Simpson diversity index
-hboth_worse_dominance_bcphc <- vegan::diversity(merge_hboth_wide_worse_bcphc, index = "simpson")
-# Dominance indices
-hboth_worse_BPindex_bcphc <- microbiome::dominance(t(merge_hboth_wide_worse_bcphc))
-# store all indices in one data frame
-div_hboth_worse_bcphc <- data.frame(cbind(hboth_worse_fisher_bcphc, hboth_worse_shannon_bcphc, hboth_worse_specNum_bcphc, hboth_worse_dominance_bcphc, 
-                                          hboth_worse_BPindex_bcphc$gini))
-# rename columns
-colnames(div_hboth_worse_bcphc) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add metadata
-div_hboth_worse_bcphc$performance <- "Worse"
-div_hboth_worse_bcphc$normalisation <- "BCPHC"
+network_table_3_genus$Var1 <- NULL
+network_table_3_genus$Var2 <- NULL
+network_table_3_genus$species_type <- NULL
+# remove duplicate rows and sum values
+network_table_3_genus <- ddply(network_table_3_genus, "Genus", numcolwise(sum))
+rownames(network_table_3_genus) <- network_table_3_genus$Genus
+network_table_3_genus$Genus <- NULL
+# transpose data frame
+network_table_3_genus_t <- data.frame(t(network_table_3_genus))
+# make data frame with species type (core vs rare) information
+network_table_2_core_rare <- network_table_2_long
+network_table_2_core_rare$Var1 <- NULL
+network_table_2_core_rare$Var2 <- NULL
+network_table_2_core_rare <- ddply(network_table_2_core_rare, "species_type", numcolwise(sum))
+rownames(network_table_2_core_rare) <- network_table_2_core_rare$species_type
+network_table_2_core_rare$species_type <- NULL
+# transpose data frame
+network_table_2_core_rare_t <- data.frame(t(network_table_2_core_rare))
 
-# subset and extract RLE-normalised data
-merge_hboth_wide_worse_rle <- subset(merge_hboth_wide_worse, Var4 == "RLE")
-# set NAs to zero
-merge_hboth_wide_worse_rle[is.na(merge_hboth_wide_worse_rle)] <- 0
-# remove column
-merge_hboth_wide_worse_rle$species_type <- NULL
-# remove duplicate rows and sum those entries
-merge_hboth_wide_worse_rle <- ddply(merge_hboth_wide_worse_rle,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_worse_rle) <- merge_hboth_wide_worse_rle$Var3
 # remove columns
-merge_hboth_wide_worse_rle$Var3 <- NULL
-merge_hboth_wide_worse_rle$Var4 <- NULL
-# generate data frame object
-merge_hboth_wide_worse_rle <- data.frame(merge_hboth_wide_worse_rle)
-# get alpha diversity indices
-hboth_worse_fisher_rle <- vegan::fisher.alpha(merge_hboth_wide_worse_rle)
-# Shannon diversity index
-hboth_worse_shannon_rle <- vegan::diversity(merge_hboth_wide_worse_rle, index = "shannon")
-# Species number
-hboth_worse_specNum_rle <- vegan::specnumber(merge_hboth_wide_worse_rle)
-# Simpson diversity
-hboth_worse_dominance_rle <- vegan::diversity(merge_hboth_wide_worse_rle, index = "simpson")
-# Dominance index
-hboth_worse_BPindex_rle <- microbiome::dominance(t(merge_hboth_wide_worse_rle))
-# store all indices in one data frame
-div_hboth_worse_rle <- data.frame(cbind(hboth_worse_fisher_rle, hboth_worse_shannon_rle, hboth_worse_specNum_rle, hboth_worse_dominance_rle, 
-                                        hboth_worse_BPindex_rle$gini))
-# add column names
-colnames(div_hboth_worse_rle) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add meta data
-div_hboth_worse_rle$performance <- "Worse"
-div_hboth_worse_rle$normalisation <- "RLE"
+network_table_3_long$Var2 <- NULL
+network_table_3_long$species_type <- NULL
+network_table_3_long <- ddply(network_table_3_long, "Var1", numcolwise(sum))
+rownames(network_table_3_long) <- network_table_3_long$Var1
+network_table_3_long$Var1 <- NULL
+network_table_3_long_t <- data.frame(t(network_table_3_long))
+network_table_3_long_t <- network_table_3_long_t[order(rownames(network_table_3_long_t)),]
+network_table_3_genus_t <- network_table_3_genus_t[order(rownames(network_table_3_genus_t)),]
 
-# subset and extract VST-normalised data
-merge_hboth_wide_worse_vst <- subset(merge_hboth_wide_worse, Var4 == "VST")
-# set NAs to zero
-merge_hboth_wide_worse_vst[is.na(merge_hboth_wide_worse_vst)] <- 0
-# remove column
-merge_hboth_wide_worse_vst$species_type <- NULL
-# remove duplicate rows and sum those entries
-merge_hboth_wide_worse_vst <- ddply(merge_hboth_wide_worse_vst,"Var3",numcolwise(sum))
-# rename rows
-rownames(merge_hboth_wide_worse_vst) <- merge_hboth_wide_worse_vst$Var3
-# remove columns
-merge_hboth_wide_worse_vst$Var3 <- NULL
-merge_hboth_wide_worse_vst$Var4 <- NULL
-# generate data frame object
-merge_hboth_wide_worse_vst <- data.frame(merge_hboth_wide_worse_vst)
-# get alpha diversity indices
-hboth_worse_fisher_vst <- vegan::fisher.alpha(merge_hboth_wide_worse_vst)
-# Shannon diversity index
-hboth_worse_shannon_vst <- vegan::diversity(merge_hboth_wide_worse_vst, index = "shannon")
-# Species number
-hboth_worse_specNum_vst <- vegan::specnumber(merge_hboth_wide_worse_vst)
-# Simpson diversity index
-hboth_worse_dominance_vst <- vegan::diversity(merge_hboth_wide_worse_vst, index = "simpson")
-# Dominance index
-hboth_worse_BPindex_vst <- microbiome::dominance(t(merge_hboth_wide_worse_vst))
-# store all indices in one data frame
-div_hboth_worse_vst <- data.frame(cbind(hboth_worse_fisher_vst, hboth_worse_shannon_vst, 
-                                        hboth_worse_specNum_vst, hboth_worse_dominance_vst, 
-                                        hboth_worse_BPindex_vst$gini))
-# rename columns
-colnames(div_hboth_worse_vst) <- c("fisher", "shannon", "specNumber", "dominance", "gini")
-# add meta data
-div_hboth_worse_vst$performance <- "Worse"
-div_hboth_worse_vst$normalisation <- "VST"
+# merge data frames
+network_table_3_t <- data.frame(cbind(network_table_3_long_t, network_table_3_genus_t))
+# built species diversity index based on species information
+network_table_3_t$Shannon <- vegan::diversity(network_table_3_t, index="shannon")
+network_table_3_t$Simpson <- vegan::diversity(network_table_3_t, index="simpson")
 
-# combine all normalisation outputs in one data frame
-div_hboth_worse <- data.frame(rbind(div_hboth_worse_bcphc,div_hboth_worse_rle, div_hboth_worse_vst))
-# combine improved and worse output into one data frame
-div_hboth <- data.frame(rbind(div_hboth_better, div_hboth_worse))
-# convert performance ("improved", "worse) from class character to class factor
-div_hboth$performance <- as.factor(as.character(div_hboth$performance))
+# add column based on stabilization/destabilization effect
+network_table_3_t$Outcome <- ifelse(grepl("Destabilisation", rownames(network_table_3_long_t)),"Stabilisation", "Destabilisation")
+
+# log-transform core and rare species counts and add pseudo count of 0.01
+network_table_3_t$core_species <- log2(network_table_2_core_rare_t$Core+0.01)
+network_table_3_t$rare_species <- log2(network_table_2_core_rare_t$Rare+0.01)
+network_table_3_t <- network_table_3_t[,-c(1:29)]
+network_table_3_t$Outcome <- factor(network_table_3_t$Outcome, levels = c("Stabilisation", "Destabilisation"))
 
 ############################################################################################################
-# Statistics
-# Is the Shannon diversity index significantly different between good and bad performance of modulated CF network?
-wilcox.test(shannon ~ performance, data=div_hboth)
-# Calculate effect size with confidence intervals
-wilcoxonR(div_hboth$shannon, g=div_hboth$performance, ci=TRUE)
+# binomial regression analysis
+# split dataframe into train and test dataset (70:30)
+train <- network_table_3_t[1:1972,]
+test <- network_table_3_t[1973:nrow(network_table_3_t),]
 
-# Is the Community dominance index significantly different between good and bad performance of modulated CF network?
-wilcox.test(gini ~ performance, data=div_hboth)
-# Calculate effect size with confidence intervals
-wilcoxonR(div_hboth$gini, g=div_hboth$performance, ci=TRUE)
+# run regression model based on train dataset
+model <- glm(Outcome ~.,family=binomial(link='logit'),data=train)
 
-# Frequency plot
-# Are core species more important than rare speces in improving the CF network?
-wilcox.test(Per ~ species_type, data=table_outcome_improved)
-wilcoxonR(table_outcome_improved$Per, g=table_outcome_improved$species_type, ci=TRUE)
+# extract model summary
+model_df <- summary(model)
+model_df_2 <- data.frame(model_df$coefficients)
+model_df_2$z.value <- ifelse(model_df_2$Pr...z.. > 0.05, 0, model_df_2$z.value)
+model_df_2$variables <- rownames(model_df_2)
+model_df_2$Category <- ifelse(model_df_2$z.value < 0, "Stabilisation", "Destabilisation")
+model_df_3 <- model_df_2[-1,]
+ 
+# rename column entries
+model_df_3$variables <- str_replace(model_df_3$variables, "core_species", "Core species")
+model_df_3$variables <- str_replace(model_df_3$variables, "rare_species", "Rare species")
+model_df_3$variables <- str_replace(model_df_3$variables, "Shannon", "Shannon diversity")
+model_df_3$variables <- str_replace(model_df_3$variables, "Simpson", "Simpson diversity")
+
+# evaluate variance
+anova(model, test="Chisq")
+fitted.results <- predict(model,newdata=test,type='response')
+fitted.results <- ifelse(fitted.results > 0.5,1,0)
+
+# model validation with test dataset
+p <- predict(model, newdata=test, type="response")
+pr <- prediction(p, test$Outcome, label.ordering = c("Stabilisation","Destabilisation"))
+# true positive/false positive rate evaluation
+prf <- performance(pr, measure = "tpr", x.measure = "fpr")
+# area under the curve
+auc <- performance(pr, measure = "auc")
+auc <- auc@y.values[[1]] # 0.9358931
+
+# make new data frame and rename/mutate columns
+model_df_4 <- model_df_3 %>%
+  mutate(
+    variables = factor(variables, levels = variables[order(z.value, decreasing = TRUE)]),
+    label_y = ifelse(z.value < 0, 0.2, -0.2),
+    label_hjust = ifelse(z.value < 0, 0, 1))
+
+# generate z-score plot
+my_plot <- ggplot(model_df_4, aes(x = variables, y = z.value, fill = Category)) +
+  geom_bar(stat = "identity", col = "black") +
+  geom_text(aes(y = label_y, label = variables, hjust = label_hjust)) +
+  coord_flip() +
+  scale_fill_manual(values = c(Stabilisation = "darkgreen", Destabilisation = "darkred")) +
+  theme_bw() + ylab("Z-score") +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank(), 
+        axis.text.x = element_text(size=12), axis.title.x = element_text(size=12),
+        panel.grid = element_blank(), legend.text = element_text(size=12), legend.title = element_blank(), legend.position = "none") +
+  scale_y_continuous(limits = c(-12, 12))
+
+# generate area under the curve validation
+auc_plot <- ggplot(data=NULL) +
+  geom_line(aes(x=prf@x.values[[1]], y=prf@y.values[[1]])) +
+  theme_bw() + theme(panel.grid = element_blank(), axis.text = element_text(size=12), 
+                     axis.title = element_text(size=12)) + 
+  geom_label(aes(x=0.7,0.1),label=paste("AUC =",round(auc,2))) +
+  xlab("False positive rate") + ylab("True positive rate")
+
+# merge both plots
+plot_auc <- ggarrange(my_plot, auc_plot, widths = c(1,0.8))
 
 ############################################################################################################
-# generate plots for simulation runs
-# plot heatmap
-heatmap_plot <- ggplot(table_outcome) +
-  geom_tile(aes(x=Var3, y=Var2, fill=Per_scale)) +
-  scale_fill_gradientn(colours=c("white", "peachpuff", "firebrick1", "firebrick2", "black")) +
-  facet_wrap(~Var1 ~Var4, nrow=1) + xlab("Number of nodes") +  ylab("") +
-  scale_x_continuous(breaks=c(3,6,9), limits = c(1.5,10.5)) +
-  theme_bw(base_size=10) + theme(panel.grid = element_blank(), panel.background = element_blank()) +
-  theme(legend.title = element_blank(), axis.text.y = element_text(face = "italic"),
-        strip.background = element_rect(fill = "white"))
-
-freq_plot <-  ggplot(data=table_outcome_improved, aes(x=species_type, y=scale(Per))) +
-  geom_boxplot(width=0.4, colour="darkred", outlier.alpha = 0) +
-  geom_jitter(width=0.05, colour="black", alpha=0.4) +
-  stat_summary(fun=median, geom="point", color="darkred") +
-  stat_compare_means(label = "p.signif", label.x.npc = "centre", label.y = 1.4, size=3) +
-  ylab("Scaled frequency") + theme_bw(base_size=10) + xlab("Species type") + coord_flip() +
-  theme(panel.grid = element_blank(),
-        axis.title = element_text(size=8))
-
-hboth_gini <- ggplot(div_hboth, aes(x=performance, y=gini)) +
-  geom_boxplot(width=0.4, colour="darkred", outlier.size = 0, outlier.alpha = 0) +
-  geom_jitter(width=0.05, colour="black", alpha=0.4) +
-  stat_summary(fun=median, geom="point", color="darkred") +
-  stat_compare_means(label = "p.signif", label.x = 1.4, label.y = 0.77 ,size=5) +
-  ylab("Community dominance index") + theme_bw(base_size=10) + xlab("Performance") +
-  theme(panel.grid = element_blank(),
-        axis.title = element_text(size=8)) + ylim(0.1, 0.8)
-
-hboth_shannon <- ggplot(div_hboth, aes(x=performance, y=shannon)) + 
-  geom_boxplot(width=0.4, colour="darkred", outlier.size = 0, outlier.alpha = 0) +
-  geom_jitter(width=0.05, colour="black", alpha=0.4) +
-  stat_summary(fun=median, geom="point", color="darkred") +
-  stat_compare_means(label = "p.signif", label.x = 1.4, label.y = 3.90, size=5) +
-  ylab("Shannon diversity index") + theme_bw(base_size=10) + xlab("Performance") +
-  theme(panel.grid = element_blank(),
-        axis.title = element_text(size=8)) + ylim(1, 4)
-
-hboth_shannon_gini_plot <- ggarrange(hboth_shannon, hboth_gini, labels = c("A", "B"), font.label = list(size = 10, color = "black"))
-freq_plot_2 <- ggarrange(freq_plot, labels = c("C"), font.label = list(size = 10, color = "black"))
-all_stats_plot <- ggarrange(hboth_shannon_gini_plot, freq_plot_2, nrow=2, heights=c(1,0.6))
-
-############################################################################################################
-# save networks and attack simulations
-# save BCPHC-normalised networks
-tiff(filename="output_figures/Figure_04.tif", res=600, units="in", width=6, height = 6)
-first_net_bcphc_plot
-dev.off()
-
-# save VST and RLE-normalised networks
-tiff(filename="output_figures/other_nets.tif", res=600, units="in", width=6, height = 6)
-net_rle_vst
-dev.off()
-
-# save simulation plots
-tiff(filename="output_figures/Figure_05.tif", res=300, units="in", width=9, height = 4)
-simulation_plots
-dev.off()
-
-# save simulation statistic plots
-tiff(filename="output_figures/Figure_07.tif", res=600, units="in", width=4.5, height = 5)
-all_stats_plot
-dev.off()
-
-# save heatmap
-tiff(filename="output_figures/Figure_06.tif", res=600, units="in", width=9, height=6)
-heatmap_plot
-dev.off()
-############################################################################################################
-        
+# save figures
+ggsave(filename = "output_figures/Figure_04.pdf",first_net_bcphc_plot, width=20, height=20, device=cairo_pdf, units="cm")
+ggsave(filename="output_figures/Figure_05.pdf", rob_lwk_nullmodel, width = 25, height= 20, units="cm")
+ggsave(filename = "output_figures/Figure_06.pdf", plot_auc, width = 20, height = 10, units = "cm")
+ggsave(filename="output_figures/Supplementary_Figure_S2.pdf",net_rle_vst, width=20, height=20, units="cm")
