@@ -1,14 +1,13 @@
- # title: 'Venn diagram and bootstrapping aggregation analysis'
+# title: 'Venn diagrams and random forest bootstrapping aggregation analysis'
 # author: 'Marie-Madlen Pust'
-# date: '10 September 2021'
-
+# date: '05 December 2021'
 
 ############################################################################################################
 # clean global environment
 rm(list=ls())
 
 # set working directory
-setwd('C:/Simulations_early_infant_microbiome/R')
+setwd('C:/R')
 
 ############################################################################################################
 
@@ -44,8 +43,7 @@ ipak(packages)
 
 # import datasets
 # import meta data 
-md <- read_delim('input_files/meta_data/spatial_metadata_2020_12_2.csv', ';', 
-                 escape_double = FALSE, trim_ws = TRUE)
+md <- read_delim('input_files/meta_data/spatial_metadata_2020_12_2.csv', ';', escape_double = FALSE, trim_ws = TRUE)
 md <- data.frame(md)
 rownames(md) <- md$Sample 
 md$Sample <- NULL
@@ -66,8 +64,7 @@ md_4_6_cf <- subset(md_4_6, State == 'CF')
 
 # import pangenome data
 # BCPHC-normalised count table
-ds_pangenome <- read_delim('input_files/taxonomic_data/pangenome.bcphc.merged.csv', ';', 
-                           escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_pangenome <- read_delim('input_files/taxonomic_data/pangenome.bcphc.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_pangenome <- data.frame(ds_pangenome)
 # concatenate duplicate Species rows and sum count value
 ds_pangenome <- ddply(ds_pangenome, 'Species', numcolwise(sum))
@@ -79,8 +76,7 @@ ds_pangenome$Species <- NULL
 
 # import pangenome data
 # RLE-normalised count table
-ds_pangenome_rle <- read_delim('input_files/taxonomic_data/pangenome.rle.merged.csv', ';', 
-                               escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_pangenome_rle <- read_delim('input_files/taxonomic_data/pangenome.rle.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_pangenome_rle <- data.frame(ds_pangenome_rle)
 # concatenate duplicate Species rows and sum count value
 ds_pangenome_rle <- ddply(ds_pangenome_rle, 'Species', numcolwise(sum))
@@ -92,8 +88,7 @@ ds_pangenome_rle$Species <- NULL
 
 # import pangenome data
 # vst-normalised count table
-ds_pangenome_vst <- read_delim('input_files/taxonomic_data/pangenome.vst.merged.csv', ';', 
-                               escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_pangenome_vst <- read_delim('input_files/taxonomic_data/pangenome.vst.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_pangenome_vst <- data.frame(ds_pangenome_vst)
 # concatenate duplicate Species rows and sum count value
 ds_pangenome_vst <- ddply(ds_pangenome_vst, 'Species', numcolwise(sum))
@@ -105,8 +100,7 @@ ds_pangenome_vst$Species <- NULL
 
 # import one-strain per species data
 # bcphc-normalised count table
-ds_osps <- read_delim('input_files/taxonomic_data/osps.bcphc.merged.csv', ';', 
-                      escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_osps <- read_delim('input_files/taxonomic_data/osps.bcphc.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_osps <- data.frame(ds_osps)
 # concatenate duplicate Species rows and sum count value
 ds_osps <- ddply(ds_osps, 'Species', numcolwise(sum))
@@ -118,8 +112,7 @@ ds_osps$Species <- NULL
 
 # import one-strain per species data
 # RLE normalisation
-ds_osps_rle <- read_delim('input_files/taxonomic_data/osps.rle.merged.csv', ';', 
-                          escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_osps_rle <- read_delim('input_files/taxonomic_data/osps.rle.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_osps_rle <- data.frame(ds_osps_rle)
 # concatenate duplicate Species rows and sum count value
 ds_osps_rle <- ddply(ds_osps_rle, 'Species', numcolwise(sum))
@@ -129,8 +122,7 @@ ds_osps_rle$Species <- NULL
 
 # import one-strain per species data
 # vst normalisation
-ds_osps_vst <- read_delim('input_files/taxonomic_data/osps.vst.merged.csv', ';', 
-                          escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
+ds_osps_vst <- read_delim('input_files/taxonomic_data/osps.vst.merged.csv', ';', escape_double = FALSE, trim_ws = TRUE, skip_empty_rows = TRUE)
 ds_osps_vst <- data.frame(ds_osps_vst)
 # concatenate duplicate Species rows and sum count value
 ds_osps_vst <- ddply(ds_osps_vst, 'Species', numcolwise(sum))
@@ -944,14 +936,6 @@ cf_core_a3_pangenome_rle <- c(rownames(c_0_cf_pangenome_rle_core_a3),
                           rownames(c_4_6_cf_pangenome_rle_core_a3))
 # remove duplicate entries
 cf_core_a3_pangenome_rle <- cf_core_a3_pangenome_rle[!duplicated(cf_core_a3_pangenome_rle)]
-
-
-
-
-
-
-
-
 
 
 # age group (0 years), healthy, pangenome database, vst-normalised
@@ -2160,15 +2144,6 @@ cf_core_a3_osps_rle <- c(rownames(c_0_cf_osps_rle_core_a3),
                               rownames(c_4_6_cf_osps_rle_core_a3))
 # remove duplicate entries
 cf_core_a3_osps_rle <- cf_core_a3_osps_rle[!duplicated(cf_core_a3_osps_rle)]
-
-
-
-
-
-
-
-
-
 
 # age group (0 years), healthy, osps database, vst-normalised
 c_0_h_osps_vst <- select(ds_osps_vst, rownames(md_0_h))
@@ -4067,6 +4042,7 @@ cf_x_rare_osps_vst_a1 <- list(A = rownames(c_0_cf_osps_vst_rare_a1),
 h_x_rare_osps_vst_a2 <- list(A = rownames(c_0_h_osps_vst_rare_a2), 
                                   B = rownames(c_1_3_h_osps_vst_rare_a2), 
                                   C = rownames(c_4_6_h_osps_vst_rare_a2))
+
 # rare species, osps, 25th abundance percentile, CF
 cf_x_rare_osps_vst_a2 <- list(A = rownames(c_0_cf_osps_vst_rare_a2), 
                                    B = rownames(c_1_3_cf_osps_vst_rare_a2), 
@@ -4108,11 +4084,11 @@ cf_x_core_osps_vst_a3 <- list(A = rownames(c_0_cf_osps_vst_core_a3),
 ############################################################################################################
 # Make list of background species per database, normalisation method, disease state
 # the list can be exported for further analysis later on
-
 # CF, make list of background core species, for 25th percentile, BCPHC-normalisation, overlaps between both databases
 background_cf_core_a2_bcphc <- intersect(rownames(background_core_cf_osps_a2), rownames(background_core_cf_pangenome_a2))
+background_cf_core_a2_bcphc
 # convert to data frame
-background_a2_1 <- data.frame(rownames(background_core_cf_pangenome_a2))
+background_a2_1 <- data.frame(background_cf_core_a2_bcphc)
 # add meta data
 background_a2_1$State <- 'CF'
 background_a2_1$Species_type <- 'background_core'
@@ -4244,7 +4220,6 @@ background_a2_12$Threshold <- '25th percentile'
 background_a2_12$Normalisation <- 'RLE'
 # rename colnames
 colnames(background_a2_12) <- c('Species', 'State', 'Species_type', 'Threshold', 'Normalisation')
-
 
 
 # make list of background species, for 15th percentile
@@ -4541,14 +4516,10 @@ background_a3_12$Normalisation <- 'RLE'
 colnames(background_a3_12) <- c('Species', 'State', 'Species_type', 'Threshold', 'Normalisation')
 
 # bind all tables into one
-background_table <- data.frame(rbind(background_a1_1,background_a1_2,background_a1_4,background_a1_5,
-                                     background_a1_6, background_a1_7,background_a1_8,background_a1_9,
-                                     background_a1_10,background_a1_11,background_a1_12, background_a2_1,
-                                     background_a2_2,background_a2_3,background_a2_4,background_a2_6,
-                                     background_a2_7,background_a2_8,background_a2_9,background_a2_10,
-                                     background_a2_11,background_a2_12,background_a3_1,background_a3_2,
-                                     background_a3_3,background_a3_4,background_a3_7,background_a3_8,
-                                     background_a3_9,background_a3_10,background_a3_11,background_a3_12))
+background_table <- data.frame(rbind(background_a1_1,background_a1_2,background_a1_4,background_a1_5, background_a1_6, background_a1_7,background_a1_8,background_a1_9,
+                                     background_a1_10,background_a1_11,background_a1_12, background_a2_1, background_a2_2,background_a2_3,background_a2_4,background_a2_6,
+                                     background_a2_7,background_a2_8,background_a2_9,background_a2_10, background_a2_11,background_a2_12,background_a3_1,background_a3_2,
+                                     background_a3_3,background_a3_4,background_a3_7,background_a3_8, background_a3_9,background_a3_10,background_a3_11,background_a3_12))
 
 ############################################################################################################
 # export table into working directory
@@ -4653,66 +4624,54 @@ merge_venn_h_y_core <- list(A = merge_venn_h_y_core_A, B = merge_venn_h_y_core_B
 
 
 # Plot 1, CF, rare
-cf_rare_venn_pangenome_a2 <- ggVennDiagram(merge_venn_cf_y_rare, size=1.5, category.names = c('0', '1-3', '4-6'), 
-                                           label = 'both', label_alpha=0, percent_digits = 0) +
+cf_rare_venn_pangenome_a2 <- ggVennDiagram(merge_venn_cf_y_rare, size=1.5, category.names = c('0', '1-3', '4-6'), label = 'both', label_alpha=0, percent_digits = 0) +
   theme_bw(base_size = 6) +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none") +
-  scale_fill_gradient(low='white',high = 'red') + 
-  scale_colour_manual(values=c('grey', 'grey', 'grey')) +
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank(), panel.border = element_blank(),
+        legend.text = element_text(size=10), legend.title = element_text(color="black", size=10), legend.position = "bottom") +
+  scale_fill_gradientn(name="Species count", colours = c("white", "beige","cadetblue1", "pink", "pink2", "red"), limits=c(0,32)) +
+  scale_colour_manual(values=c('seashell2', 'seashell2', 'seashell2')) +
   geom_label(aes(x=-1.3, y=9), label='CF, rare species', size=3.5)
 
+
 # Plot 2, Healthy, rare
-h_rare_venn_pangenome_a2 <- ggVennDiagram(merge_venn_h_y_rare, size=1.5, category.names = c('0', '1-3', '4-6'),
-                                          label = 'both', label_alpha=0, percent_digits = 0) +
+h_rare_venn_pangenome_a2 <- ggVennDiagram(merge_venn_h_y_rare, size=1.5, category.names = c('0', '1-3', '4-6'), label = 'both', label_alpha=0, percent_digits = 0) +
   theme_bw(base_size = 6) +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none") +
-  scale_fill_gradient(low='white',high = 'red') + scale_colour_manual(values=c('grey', 'grey', 'grey')) +
-  geom_label(aes(x=-1.3, y=9), label='Healthy, rare species', size=3.5)
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank(), panel.border = element_blank(),
+        legend.text = element_text(size=10), legend.title = element_text(color="black", size=10), legend.position = "bottom") +
+  scale_fill_gradientn(name="Species count", colours = c("white", "beige","cadetblue1", "pink", "pink2", "red"), limits=c(0,32)) +
+  scale_colour_manual(values=c('seashell2', 'seashell2', 'seashell2')) +
+  geom_label(aes(x=-1.3, y=9), label='H, rare species', size=3.5)
+
 
 # Plot 3, CF, core
-cf_core_venn_pangenome_a2 <- ggVennDiagram(merge_venn_cf_y_core, size=1.5, 
-                                           category.names = c('0', '1-3', '4-6'), 
-                                           label = 'both', label_alpha=0, percent_digits = 0) +
+cf_core_venn_pangenome_a2 <- ggVennDiagram(merge_venn_cf_y_core, size=1.5, category.names = c('0', '1-3', '4-6'), label = 'both', label_alpha=0, percent_digits = 0) +
   theme_bw(base_size = 6) +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none") +
-  scale_fill_gradient(low='white',high = 'red') + scale_colour_manual(values=c('grey', 'grey', 'grey')) +
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank(), panel.border = element_blank(),
+        legend.text = element_text(size=10), legend.title = element_text(color="black", size=10), legend.position = "bottom") +
+  scale_fill_gradientn(name="Species count", colours = c("white", "beige","cadetblue1", "pink", "pink2", "red"), limits=c(0,32)) +
+  scale_colour_manual(values=c('seashell2', 'seashell2', 'seashell2')) +
   geom_label(aes(x=-1.3, y=9), label='CF, core species', size=3.5)
 
+
 # Plot 4, Healthy, core
-h_core_venn_pangenome_a2 <- ggVennDiagram(merge_venn_h_y_core, size=0.2, 
-                                          category.names = c('0', '1-3', '4-6'), 
-                                          label = 'both', label_alpha=0, percent_digits = 0) +
+h_core_venn_pangenome_a2 <- ggVennDiagram(merge_venn_h_y_core, size=1.5, category.names = c('0', '1-3', '4-6'), label = 'both', label_alpha=0, percent_digits = 0) +
   theme_bw(base_size = 6) +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(), 
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none") +
-  scale_fill_gradient(low='white',high = 'red') + 
-  scale_colour_manual(values=c('grey', 'grey', 'grey')) +
-  geom_label(aes(x=-1.3, y=9), label='Healthy, core species', size=3.5)
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank(), panel.border = element_blank(),
+        legend.text = element_text(size=10), legend.title = element_text(color="black", size=10), legend.position = "bottom") +
+  scale_fill_gradientn(name="Species count", colours = c("white", "beige","cadetblue1", "pink", "pink2", "red"), limits=c(0,32)) +
+  scale_colour_manual(values=c('seashell2', 'seashell2', 'seashell2')) +
+  geom_label(aes(x=-1.3, y=9), label='H, core species', size=3.5)
+
 
 # merge plots into one
-vennDiagramsPlot_pangenome <- ggarrange(h_rare_venn_pangenome_a2, h_core_venn_pangenome_a2,
-                                        cf_rare_venn_pangenome_a2, cf_core_venn_pangenome_a2, 
+vennDiagramsPlot_pangenome <- ggarrange(h_rare_venn_pangenome_a2, h_core_venn_pangenome_a2, cf_rare_venn_pangenome_a2, cf_core_venn_pangenome_a2, 
                                         labels = c('A', 'B', 'C', 'D'), nrow=2, ncol=2, 
-                                        font.label = list(size = 14, color = "black"))
+                                        font.label = list(size = 14, color = "black"), 
+                                        common.legend = TRUE, legend = "right")
 
 ############################################################################################################
 # make line plots
@@ -5175,8 +5134,6 @@ merge_data_venn_pangenome <- data.frame(rbind(merge_data_venn_pangenome_a1, merg
 merge_data_venn_pangenome$Database <- 'Pangenome'
 
 
-
-
 # continuing with generating input data frames (osps)
 # number of core species, CF, year 0, 15th abundance percentile, BCPHC, osps
 c_0_cf_osps_core_a1_n <- length(rownames(c_0_cf_osps_core_a1))
@@ -5505,9 +5462,6 @@ c_4_6_h_osps_vst_rare_a3_n <- length(rownames(c_4_6_h_osps_vst_rare_a3))
 c_h_rare_osps_vst_a3_list <- c(c_0_h_osps_vst_rare_a3_n, c_1_3_h_osps_vst_rare_a3_n, c_4_6_h_osps_vst_rare_a3_n)
 
 
-
-
-
 # merge all information 
 # 15th abundance percentile, BCPHC 
 age_osps_a1 <- c('0', '1-3', '4-6', '0', '1-3', '4-6', '0', '1-3', '4-6', '0', '1-3', '4-6')
@@ -5633,11 +5587,10 @@ merge_data_venn_osps_vst_a3$Age <- factor(merge_data_venn_osps_vst_a3$Age, level
 
 # merge all information in one data frame
 merge_data_venn_osps <- data.frame(rbind(merge_data_venn_osps_a1, merge_data_venn_osps_a2, merge_data_venn_osps_a3,
-                                              merge_data_venn_osps_rle_a1, merge_data_venn_osps_rle_a2, merge_data_venn_osps_rle_a3,
-                                              merge_data_venn_osps_vst_a1, merge_data_venn_osps_vst_a2, merge_data_venn_osps_vst_a3))
+                                         merge_data_venn_osps_rle_a1, merge_data_venn_osps_rle_a2, merge_data_venn_osps_rle_a3,
+                                         merge_data_venn_osps_vst_a1, merge_data_venn_osps_vst_a2, merge_data_venn_osps_vst_a3))
 # add column with osps information
 merge_data_venn_osps$Database <- 'One-strain per species'
-
 
 # bind pangenome and one strain per species database
 merge_data_venn <- data.frame(rbind(merge_data_venn_pangenome, merge_data_venn_osps))
@@ -5680,37 +5633,195 @@ venn_core_rare_stats_effsize <- data.frame(rbind(venn_rare_effsize, venn_core_ef
 venn_core_rare_stats_effsize$effsize <- round(venn_core_rare_stats_effsize$effsize,2)
 
 # generate plot for core species biosphere
-core_line <- ggline(merge_data_venn_core, x='Age', y='Species_count', color='State', add = 'mean_se', size=0.2) +
-  stat_compare_means(aes(group = State), label = 'p.signif', label.y = 45, size = 1.4) + 
+merge_data_venn_core_osps <- subset(merge_data_venn_core, Database == "One-strain per species")
+core_line_osps <- ggline(merge_data_venn_core_osps, x='Age', y='Species_count', color='State', add = c('mean_se'), size=0.2) +
   theme_bw(base_size=4) + xlab('Age (in years)') + ylab('Number of species\n') +
-  theme(panel.grid = element_blank(), 
-        legend.title = element_blank(),
-        axis.text.x = element_text(size=4),
-        axis.text.y = element_text(size=4),
-        axis.title.x = element_text(size=4),
-        axis.title.y = element_text(size=4),
-        legend.text = element_text(size=3)) +
+  theme(panel.grid = element_blank(), legend.title = element_blank(),
+        axis.text.x = element_text(size=11), axis.text.y = element_text(size=11), axis.title.x = element_text(size=11), axis.title.y = element_text(size=11),
+        legend.text = element_text(size=11)) +
   scale_colour_manual(values=c('red', 'black')) +
-  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,110) +
-  geom_label(aes(x=2, y=108), label='Core species biosphere', size=1.2, bg='white')
+  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,115) +
+  geom_label(aes(x=2, y=108), label='One-strain-per-species database, \nCore species biosphere', size=3, bg='white')
 
+merge_data_venn_rare_osps <- subset(merge_data_venn_rare, Database == "One-strain per species")
 # generate plot for rare species biosphere
-rare_line <- ggline(merge_data_venn_rare, x='Age', y='Species_count', color='State', add = 'mean_se', size=0.2) +
-  stat_compare_means(aes(group = State), label = 'p.signif', label.y = 90, size=1.4) + 
+rare_line_osps <- ggline(merge_data_venn_rare_osps, x='Age', y='Species_count', color='State', add = c('mean_se'), size=0.2) +
   theme_bw(base_size=4) + xlab('Age (in years)') + ylab('\n ') +
-  theme(panel.grid = element_blank(), 
-        legend.title = element_blank(),
-        axis.text.x = element_text(size=4),
-        axis.text.y = element_text(size=4),
-        axis.title.x = element_text(size=4),
-        axis.title.y = element_text(size=4),
-        legend.text = element_text(size=3)) + 
+  theme(panel.grid = element_blank(), legend.title = element_blank(),
+        axis.text.x = element_text(size=11), axis.text.y = element_text(size=11), axis.title.x = element_text(size=11), axis.title.y = element_text(size=11),
+        legend.text = element_text(size=11)) + 
   scale_colour_manual(values=c('red', 'black')) +
-  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,110) +
-  geom_label(aes(x=2, y=108), label='Rare species biosphere', size=1.2, bg='white')
+  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,115) +
+  geom_label(aes(x=2, y=108), label='One-strain-per-species database, \nRare species biosphere', size=3, bg='white')
+
+merge_data_venn_core_pan<- subset(merge_data_venn_core, Database == "Pangenome")
+core_line_pan <- ggline(merge_data_venn_core_pan, x='Age', y='Species_count', color='State', add = c('mean_se'), size=0.2) +
+  theme_bw(base_size=4) + xlab('Age (in years)') + ylab('Number of species\n') +
+  theme(panel.grid = element_blank(), legend.title = element_blank(),
+        axis.text.x = element_text(size=11), axis.text.y = element_text(size=11), axis.title.x = element_text(size=11), axis.title.y = element_text(size=11),
+        legend.text = element_text(size=11)) +
+  scale_colour_manual(values=c('red', 'black')) +
+  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,115) +
+  geom_label(aes(x=2, y=108), label='Pan-genome database, \nCore species biosphere', size=3, bg='white')
+
+merge_data_venn_rare_pan <- subset(merge_data_venn_rare, Database == "Pangenome")
+# generate plot for rare species biosphere
+rare_line_pan<- ggline(merge_data_venn_rare_pan, x='Age', y='Species_count', color='State', add = c('mean_se'), size=0.2) +
+  theme_bw(base_size=4) + xlab('Age (in years)') + ylab('\n ') +
+  theme(panel.grid = element_blank(), legend.title = element_blank(),
+        axis.text.x = element_text(size=11), axis.text.y = element_text(size=11), axis.title.x = element_text(size=11), axis.title.y = element_text(size=11),
+        legend.text = element_text(size=11)) + 
+  scale_colour_manual(values=c('red', 'black')) +
+  scale_x_discrete(labels=c('0', '1-3', '4-6')) + ylim(0,115) +
+  geom_label(aes(x=2, y=108), label='Pan-genome database, \nRare species biosphere', size=3, bg='white')
 
 # merge plot for core and rare species biosphere
-line_plots <- ggarrange(core_line, rare_line, labels=c('A', 'B'), common.legend = TRUE, font.label = list(size = 4, color = "black"))
+line_plots <- ggarrange(core_line_osps, rare_line_osps, core_line_pan, rare_line_pan, labels=c('A', 'B', 'C', 'D'), common.legend = TRUE, font.label = list(size = 12, color = "black"))
+
+#########################################################################################################################################
+# Statistical comparison of count data
+# Fisher's Exact Test for Count Data, pan-genome, 0 years, core species
+merge_data_venn_core_pan_0 <- subset(merge_data_venn_core_pan, Age == "0")
+table_it_0_core <- table(merge_data_venn_core_pan_0$Species_count,merge_data_venn_core_pan_0$State)
+table_it_df_0_core <- data.frame(table_it_0_core)
+table_it_df_h_0_core <- subset(table_it_df_0_core, Var2 == "Healthy")
+table_it_df_cf_0_core <- subset(table_it_df_0_core, Var2 == "CF")
+table_it_df_cf_0_core$Freq2 <- table_it_df_h_0_core$Freq
+table_it_df_cf_0_core$Var1 <- NULL
+table_it_df_cf_0_core$Var2 <- NULL
+fisher.test(table_it_df_cf_0_core, conf.int = TRUE) 
+
+# Fisher's Exact Test for Count Data, pan-genome, 1-3 years, core species
+merge_data_venn_core_pan_1_3 <- subset(merge_data_venn_core_pan, Age == "1-3")
+table_it_1_3_core <- table(merge_data_venn_core_pan_1_3$Species_count,merge_data_venn_core_pan_1_3$State)
+table_it_df_1_3_core <- data.frame(table_it_1_3_core)
+table_it_df_h_1_3_core <- subset(table_it_df_1_3_core, Var2 == "Healthy")
+table_it_df_cf_1_3_core <- subset(table_it_df_1_3_core, Var2 == "CF")
+table_it_df_cf_1_3_core$Freq2 <- table_it_df_h_1_3_core$Freq
+table_it_df_cf_1_3_core$Var1 <- NULL
+table_it_df_cf_1_3_core$Var2 <- NULL
+fisher.test(table_it_df_cf_1_3_core, conf.int = TRUE)
+
+
+# Fisher's Exact Test for Count Data, pan-genome, 1-3 years, core species
+merge_data_venn_core_pan_4_6 <- subset(merge_data_venn_core_pan, Age == "4-6")
+table_it_4_6_core <- table(merge_data_venn_core_pan_4_6$Species_count, merge_data_venn_core_pan_4_6$State)
+table_it_df_4_6_core <- data.frame(table_it_4_6_core)
+table_it_df_h_4_6_core <- subset(table_it_df_4_6_core, Var2 == "Healthy")
+table_it_df_cf_4_6_core <- subset(table_it_df_4_6_core, Var2 == "CF")
+table_it_df_cf_4_6_core$Freq2 <- table_it_df_h_4_6_core$Freq
+table_it_df_cf_4_6_core$Var1 <- NULL
+table_it_df_cf_4_6_core$Var2 <- NULL
+fisher.test(table_it_df_cf_4_6_core, conf.int = TRUE) 
+
+
+# Statistical comparison of count data
+# Fisher's Exact Test for Count Data, pan-genome, 0 years, rare species
+merge_data_venn_rare_pan_0 <- subset(merge_data_venn_rare_pan, Age == "0")
+table_it_0_rare <- table(merge_data_venn_rare_pan_0$Species_count,merge_data_venn_rare_pan_0$State)
+table_it_df_0_rare <- data.frame(table_it_0_rare)
+table_it_df_h_0_rare <- subset(table_it_df_0_rare, Var2 == "Healthy")
+table_it_df_cf_0_rare <- subset(table_it_df_0_rare, Var2 == "CF")
+table_it_df_cf_0_rare$Freq2 <- table_it_df_h_0_rare$Freq
+table_it_df_cf_0_rare$Var1 <- NULL
+table_it_df_cf_0_rare$Var2 <- NULL
+fisher.test(table_it_df_cf_0_rare, conf.int = TRUE) 
+
+# Fisher's Exact Test for Count Data, pan-genome, 1-3 years, rare species
+merge_data_venn_rare_pan_1_3 <- subset(merge_data_venn_rare_pan, Age == "1-3")
+table_it_1_3_rare <- table(merge_data_venn_rare_pan_1_3$Species_count,merge_data_venn_rare_pan_1_3$State)
+table_it_df_1_3_rare <- data.frame(table_it_1_3_rare)
+table_it_df_h_1_3_rare <- subset(table_it_df_1_3_rare, Var2 == "Healthy")
+table_it_df_cf_1_3_rare <- subset(table_it_df_1_3_rare, Var2 == "CF")
+table_it_df_cf_1_3_rare$Freq2 <- table_it_df_h_1_3_rare$Freq
+table_it_df_cf_1_3_rare$Var1 <- NULL
+table_it_df_cf_1_3_rare$Var2 <- NULL
+fisher.test(table_it_df_cf_1_3_rare, conf.int = TRUE)
+
+
+# Fisher's Exact Test for Count Data, pan-genome, 4-6 years, rare species
+merge_data_venn_rare_pan_4_6 <- subset(merge_data_venn_rare_pan, Age == "4-6")
+table_it_4_6_rare <- table(merge_data_venn_rare_pan_4_6$Species_count, merge_data_venn_rare_pan_4_6$State)
+table_it_df_4_6_rare <- data.frame(table_it_4_6_rare)
+table_it_df_h_4_6_rare <- subset(table_it_df_4_6_rare, Var2 == "Healthy")
+table_it_df_cf_4_6_rare <- subset(table_it_df_4_6_rare, Var2 == "CF")
+table_it_df_cf_4_6_rare$Freq2 <- table_it_df_h_4_6_rare$Freq
+table_it_df_cf_4_6_rare$Var1 <- NULL
+table_it_df_cf_4_6_rare$Var2 <- NULL
+fisher.test(table_it_df_cf_4_6_rare, conf.int = TRUE) 
+
+
+# Statistical comparison of count data
+# Fisher's Exact Test for Count Data, one-strain-per-species, 0 years, core species
+merge_data_venn_core_osps_0 <- subset(merge_data_venn_core_osps, Age == "0")
+table_it_0_core_osps <- table(merge_data_venn_core_osps_0$Species_count,merge_data_venn_core_osps_0$State)
+table_it_df_0_core_osps <- data.frame(table_it_0_core_osps)
+table_it_df_h_0_core_osps <- subset(table_it_df_0_core_osps, Var2 == "Healthy")
+table_it_df_cf_0_core_osps <- subset(table_it_df_0_core_osps, Var2 == "CF")
+table_it_df_cf_0_core_osps$Freq2 <- table_it_df_h_0_core_osps$Freq
+table_it_df_cf_0_core_osps$Var1 <- NULL
+table_it_df_cf_0_core_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_0_core_osps, conf.int = TRUE) 
+
+# Fisher's Exact Test for Count Data, one-strain-per-species, 1-3 years, core species
+merge_data_venn_core_osps_1_3 <- subset(merge_data_venn_core_osps, Age == "1-3")
+table_it_1_3_core_osps <- table(merge_data_venn_core_osps_1_3$Species_count,merge_data_venn_core_osps_1_3$State)
+table_it_df_1_3_core_osps <- data.frame(table_it_1_3_core_osps)
+table_it_df_h_1_3_core_osps <- subset(table_it_df_1_3_core_osps, Var2 == "Healthy")
+table_it_df_cf_1_3_core_osps <- subset(table_it_df_1_3_core_osps, Var2 == "CF")
+table_it_df_cf_1_3_core_osps$Freq2 <- table_it_df_h_1_3_core_osps$Freq
+table_it_df_cf_1_3_core_osps$Var1 <- NULL
+table_it_df_cf_1_3_core_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_1_3_core, conf.int = TRUE) 
+
+
+# Fisher's Exact Test for Count Data, one-strain-per-species, 1-3 years, core species
+merge_data_venn_core_osps_4_6 <- subset(merge_data_venn_core_osps, Age == "4-6")
+table_it_4_6_core_osps <- table(merge_data_venn_core_osps_4_6$Species_count, merge_data_venn_core_osps_4_6$State)
+table_it_df_4_6_core_osps <- data.frame(table_it_4_6_core_osps)
+table_it_df_h_4_6_core_osps <- subset(table_it_df_4_6_core_osps, Var2 == "Healthy")
+table_it_df_cf_4_6_core_osps <- subset(table_it_df_4_6_core_osps, Var2 == "CF")
+table_it_df_cf_4_6_core_osps$Freq2 <- table_it_df_h_4_6_core_osps$Freq
+table_it_df_cf_4_6_core_osps$Var1 <- NULL
+table_it_df_cf_4_6_core_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_4_6_core_osps, conf.int = TRUE) 
+
+
+# Statistical comparison of count data
+# Fisher's Exact Test for Count Data, one-strain-per-species, 0 years, rare species
+merge_data_venn_rare_osps_0 <- subset(merge_data_venn_rare_osps, Age == "0")
+table_it_0_rare_osps <- table(merge_data_venn_rare_osps_0$Species_count,merge_data_venn_rare_osps_0$State)
+table_it_df_0_rare_osps <- data.frame(table_it_0_rare_osps)
+table_it_df_h_0_rare_osps <- subset(table_it_df_0_rare_osps, Var2 == "Healthy")
+table_it_df_cf_0_rare_osps <- subset(table_it_df_0_rare_osps, Var2 == "CF")
+table_it_df_cf_0_rare_osps$Freq2 <- table_it_df_h_0_rare_osps$Freq
+table_it_df_cf_0_rare_osps$Var1 <- NULL
+table_it_df_cf_0_rare_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_0_rare_osps, conf.int = TRUE) 
+
+# Fisher's Exact Test for Count Data, one-strain-per-species, 1-3 years, rare species
+merge_data_venn_rare_osps_1_3 <- subset(merge_data_venn_rare_osps, Age == "1-3")
+merge_data_venn_rare_osps
+table_it_1_3_rare_osps <- table(merge_data_venn_rare_osps_1_3$Species_count,merge_data_venn_rare_osps_1_3$State)
+table_it_df_1_3_rare_osps <- data.frame(table_it_1_3_rare_osps)
+table_it_df_h_1_3_rare_osps <- subset(table_it_df_1_3_rare_osps, Var2 == "Healthy")
+table_it_df_cf_1_3_rare_osps <- subset(table_it_df_1_3_rare_osps, Var2 == "CF")
+table_it_df_cf_1_3_rare_osps$Freq2 <- table_it_df_h_1_3_rare_osps$Freq
+table_it_df_cf_1_3_rare_osps$Var1 <- NULL
+table_it_df_cf_1_3_rare_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_1_3_rare_osps, conf.int = TRUE) 
+
+
+# Fisher's Exact Test for Count Data, one-strain-per-species, 1-3 years, rare species
+merge_data_venn_rare_osps_4_6 <- subset(merge_data_venn_rare_osps, Age == "4-6")
+table_it_4_6_rare_osps <- table(merge_data_venn_rare_osps_4_6$Species_count, merge_data_venn_rare_osps_4_6$State)
+table_it_df_4_6_rare_osps <- data.frame(table_it_4_6_rare_osps)
+table_it_df_h_4_6_rare_osps <- subset(table_it_df_4_6_rare_osps, Var2 == "Healthy")
+table_it_df_cf_4_6_rare_osps <- subset(table_it_df_4_6_rare_osps, Var2 == "CF")
+table_it_df_cf_4_6_rare_osps$Freq2 <- table_it_df_h_4_6_rare_osps$Freq
+table_it_df_cf_4_6_rare_osps$Var1 <- NULL
+table_it_df_cf_4_6_rare_osps$Var2 <- NULL
+fisher.test(table_it_df_cf_4_6_rare_osps, conf.int = TRUE) 
 
 ############################################################################################################
 # Preparation for random forest analysis
@@ -5920,7 +6031,6 @@ uniform_df_pangenome_a1 <- data.frame(t(uniform_df_pangenome_a1))
 # add columns with host-associated variables
 uniform_df_pangenome_a1$Age <- 'Age'
 uniform_df_pangenome_a1$BMI <- 'BMI'
-uniform_df_pangenome_a1$LCI <- 'LCI'
 uniform_df_pangenome_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_a1 <- data.frame(t(uniform_df_pangenome_a1))
@@ -6042,14 +6152,17 @@ for (i in random_seeds){
                                                                         'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_a1_sub$species_type_2 <- with(imp_pangenome_a1_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                              ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                     ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                            ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                   ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                       'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                       'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_a1_short <-ddply(imp_pangenome_a1_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_a1_sub <- subset(imp_pangenome_a1_sub, Boruta_predict != "Rejected")
+  imp_pangenome_a1_short <- ddply(imp_pangenome_a1_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_a1_short$Seed <- i
   imp_pangenome_a1_short$Threshold <- '15th percentile'
@@ -6057,6 +6170,7 @@ for (i in random_seeds){
   # store short table globally
   imp.sort.gini_pangenome_a1_final <- rbind(imp.sort.gini_pangenome_a1_final, imp_pangenome_a1_short)
 }
+
 
 
 # random forest, pangenome, bcphc, 25th abundance percentile
@@ -6093,7 +6207,6 @@ uniform_df_pangenome_a2 <- data.frame(t(uniform_df_pangenome_a2))
 # add columns with host-associated variables
 uniform_df_pangenome_a2$Age <- 'Age'
 uniform_df_pangenome_a2$BMI <- 'BMI'
-uniform_df_pangenome_a2$LCI <- 'LCI'
 uniform_df_pangenome_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_a2 <- data.frame(t(uniform_df_pangenome_a2))
@@ -6215,14 +6328,17 @@ for (i in random_seeds){
                                                                         'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_a2_sub$species_type_2 <- with(imp_pangenome_a2_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                              ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                     ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                            ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                   ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                       'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                       'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_a2_short <-ddply(imp_pangenome_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_a2_sub <- subset(imp_pangenome_a2_sub, Boruta_predict != "Rejected")
+  imp_pangenome_a2_short <- ddply(imp_pangenome_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_a2_short$Seed <- i
   imp_pangenome_a2_short$Threshold <- '25th percentile'
@@ -6265,7 +6381,6 @@ uniform_df_pangenome_a3 <- data.frame(t(uniform_df_pangenome_a3))
 # add columns with host-associated variables
 uniform_df_pangenome_a3$Age <- 'Age'
 uniform_df_pangenome_a3$BMI <- 'BMI'
-uniform_df_pangenome_a3$LCI <- 'LCI'
 uniform_df_pangenome_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_a3 <- data.frame(t(uniform_df_pangenome_a3))
@@ -6387,13 +6502,16 @@ for (i in random_seeds){
                                                                         'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_a3_sub$species_type_2 <- with(imp_pangenome_a3_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                              ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                     ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                            ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                   ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                       'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                       'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
+  imp_pangenome_a3_sub <- subset(imp_pangenome_a3_sub, Boruta_predict != "Rejected")
   imp_pangenome_a3_short <-ddply(imp_pangenome_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_a3_short$Seed <- i
@@ -6406,7 +6524,7 @@ for (i in random_seeds){
 
 # merge all information, random forest, pangenome, BCPHC, 15th abundance percentile, 25th abundance percentile, 35th abundance percentile
 rf.imp.sort.pangenome <- data.frame(rbind(imp.sort.gini_pangenome_a1_final,imp.sort.gini_pangenome_a2_final, imp.sort.gini_pangenome_a3_final))
-rf.imp.sort.pangenome$database <- 'Pangenome'
+rf.imp.sort.pangenome$Database <- 'Pangenome'
 rf.pred.prob.pangenome <- data.frame(rbind(rf_pangenome_a1_pred_final,rf_pangenome_a2_pred_final, rf_pangenome_a3_pred_final))
 rf.error.pangenome <- data.frame(rbind(error_rate_pangenome_a1_final,error_rate_pangenome_a2_final, error_rate_pangenome_a3_final))
 
@@ -6445,7 +6563,6 @@ uniform_df_pangenome_rle_a1 <- data.frame(t(uniform_df_pangenome_rle_a1))
 # add columns with host-associated variables
 uniform_df_pangenome_rle_a1$Age <- 'Age'
 uniform_df_pangenome_rle_a1$BMI <- 'BMI'
-uniform_df_pangenome_rle_a1$LCI <- 'LCI'
 uniform_df_pangenome_rle_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_rle_a1 <- data.frame(t(uniform_df_pangenome_rle_a1))
@@ -6509,10 +6626,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_pangenome_rle_a1 <- randomForest(response_pangenome_rle_a1~., data = rf.data_pangenome_rle_a1, 
-                                             ntree = 80, 
-                                             mtry=sample_val_pangenome_rle_a1, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                                 ntree = 80, 
+                                                 mtry=sample_val_pangenome_rle_a1, 
+                                                 importance=TRUE,
+                                                 na.action = na.roughfix)
   
   # store error rate locally
   error_rate_pangenome_rle_a1 <- erie.classify_pangenome_rle_a1$err.rate
@@ -6557,24 +6674,28 @@ for (i in random_seeds){
   imp_pangenome_rle_a1_sub$predictors <- str_replace(imp_pangenome_rle_a1_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-associated
   imp_pangenome_rle_a1_sub$species_type <- with(imp_pangenome_rle_a1_sub,
-                                            ifelse(predictors %in% f_rare_species_pangenome_rle_a1, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_pangenome_rle_a1, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_pangenome_rle_a1, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_pangenome_rle_a1, 
-                                                                        'Core species', 'Host-associated')))))
+                                                ifelse(predictors %in% f_rare_species_pangenome_rle_a1, 
+                                                       'Rare species', 
+                                                       ifelse(predictors %in% f_core_species_pangenome_rle_a1, 
+                                                              'Core species', 
+                                                              ifelse(predictors %in% fluctuating_rare_pangenome_rle_a1, 
+                                                                     'Rare species',
+                                                                     ifelse(predictors %in% fluctuating_core_pangenome_rle_a1, 
+                                                                            'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_rle_a1_sub$species_type_2 <- with(imp_pangenome_rle_a1_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_rle_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                          'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_rle_a1_short <-ddply(imp_pangenome_rle_a1_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_rle_a1_sub <- subset(imp_pangenome_rle_a1_sub, Boruta_predict != "Rejected")
+  imp_pangenome_rle_a1_short <- ddply(imp_pangenome_rle_a1_sub, 'Species_type_2', numcolwise(sum))
+  
   # add meta data
   imp_pangenome_rle_a1_short$Seed <- i
   imp_pangenome_rle_a1_short$Threshold <- '15th percentile'
@@ -6618,7 +6739,6 @@ uniform_df_pangenome_rle_a2 <- data.frame(t(uniform_df_pangenome_rle_a2))
 # add columns with host-associated variables
 uniform_df_pangenome_rle_a2$Age <- 'Age'
 uniform_df_pangenome_rle_a2$BMI <- 'BMI'
-uniform_df_pangenome_rle_a2$LCI <- 'LCI'
 uniform_df_pangenome_rle_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_rle_a2 <- data.frame(t(uniform_df_pangenome_rle_a2))
@@ -6682,10 +6802,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_pangenome_rle_a2 <- randomForest(response_pangenome_rle_a2~., data = rf.data_pangenome_rle_a2, 
-                                             ntree = 80, 
-                                             mtry=sample_val_pangenome_rle_a2, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                                 ntree = 80, 
+                                                 mtry=sample_val_pangenome_rle_a2, 
+                                                 importance=TRUE,
+                                                 na.action = na.roughfix)
   
   # store error rate locally
   error_rate_pangenome_rle_a2 <- erie.classify_pangenome_rle_a2$err.rate
@@ -6730,24 +6850,27 @@ for (i in random_seeds){
   imp_pangenome_rle_a2_sub$predictors <- str_replace(imp_pangenome_rle_a2_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_pangenome_rle_a2_sub$species_type <- with(imp_pangenome_rle_a2_sub,
-                                            ifelse(predictors %in% f_rare_species_pangenome_rle_a2, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_pangenome_rle_a2, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_pangenome_rle_a2, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_pangenome_rle_a2, 
-                                                                        'Core species', 'Host-associated')))))
+                                                ifelse(predictors %in% f_rare_species_pangenome_rle_a2, 
+                                                       'Rare species', 
+                                                       ifelse(predictors %in% f_core_species_pangenome_rle_a2, 
+                                                              'Core species', 
+                                                              ifelse(predictors %in% fluctuating_rare_pangenome_rle_a2, 
+                                                                     'Rare species',
+                                                                     ifelse(predictors %in% fluctuating_core_pangenome_rle_a2, 
+                                                                            'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_rle_a2_sub$species_type_2 <- with(imp_pangenome_rle_a2_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_rle_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                          'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_rle_a2_short <-ddply(imp_pangenome_rle_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_rle_a2_sub <- subset(imp_pangenome_rle_a2_sub, Boruta_predict != "Rejected")
+  imp_pangenome_rle_a2_short <- ddply(imp_pangenome_rle_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_rle_a2_short$Seed <- i
   imp_pangenome_rle_a2_short$Threshold <- '25th percentile'
@@ -6791,7 +6914,6 @@ uniform_df_pangenome_rle_a3 <- data.frame(t(uniform_df_pangenome_rle_a3))
 # add columns with host-associated variables
 uniform_df_pangenome_rle_a3$Age <- 'Age'
 uniform_df_pangenome_rle_a3$BMI <- 'BMI'
-uniform_df_pangenome_rle_a3$LCI <- 'LCI'
 uniform_df_pangenome_rle_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_rle_a3 <- data.frame(t(uniform_df_pangenome_rle_a3))
@@ -6855,10 +6977,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_pangenome_rle_a3 <- randomForest(response_pangenome_rle_a3~., data = rf.data_pangenome_rle_a3, 
-                                             ntree = 80, 
-                                             mtry=sample_val_pangenome_rle_a3, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                                 ntree = 80, 
+                                                 mtry=sample_val_pangenome_rle_a3, 
+                                                 importance=TRUE,
+                                                 na.action = na.roughfix)
   
   # store error rate locally
   error_rate_pangenome_rle_a3 <- erie.classify_pangenome_rle_a3$err.rate
@@ -6903,24 +7025,27 @@ for (i in random_seeds){
   imp_pangenome_rle_a3_sub$predictors <- str_replace(imp_pangenome_rle_a3_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_pangenome_rle_a3_sub$species_type <- with(imp_pangenome_rle_a3_sub,
-                                            ifelse(predictors %in% f_rare_species_pangenome_rle_a3, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_pangenome_rle_a3, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_pangenome_rle_a3, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_pangenome_rle_a3, 
-                                                                        'Core species', 'Host-associated')))))
+                                                ifelse(predictors %in% f_rare_species_pangenome_rle_a3, 
+                                                       'Rare species', 
+                                                       ifelse(predictors %in% f_core_species_pangenome_rle_a3, 
+                                                              'Core species', 
+                                                              ifelse(predictors %in% fluctuating_rare_pangenome_rle_a3, 
+                                                                     'Rare species',
+                                                                     ifelse(predictors %in% fluctuating_core_pangenome_rle_a3, 
+                                                                            'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_rle_a3_sub$species_type_2 <- with(imp_pangenome_rle_a3_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_rle_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                          'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_rle_a3_short <-ddply(imp_pangenome_rle_a3_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_rle_a3_sub <- subset(imp_pangenome_rle_a3_sub, Boruta_predict != "Rejected")
+  imp_pangenome_rle_a3_short <- ddply(imp_pangenome_rle_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_rle_a3_short$Seed <- i
   imp_pangenome_rle_a3_short$Threshold <- '35th percentile'
@@ -6932,7 +7057,7 @@ for (i in random_seeds){
 
 # merge all information, random forest, pangenome, RLE, 15th abundance percentile, 25th abundance percentile, 35th abundance percentile
 rf.imp.sort.pangenome_rle <- data.frame(rbind(imp.sort.gini_pangenome_rle_a1_final,imp.sort.gini_pangenome_rle_a2_final, imp.sort.gini_pangenome_rle_a3_final))
-rf.imp.sort.pangenome_rle$database <- 'Pangenome'
+rf.imp.sort.pangenome_rle$Database <- 'Pangenome'
 rf.pred.prob.pangenome_rle <- data.frame(rbind(rf_pangenome_rle_a1_pred_final,rf_pangenome_rle_a2_pred_final, rf_pangenome_rle_a3_pred_final))
 rf.error.pangenome_rle <- data.frame(rbind(error_rate_pangenome_rle_a1_final,error_rate_pangenome_rle_a2_final, error_rate_pangenome_rle_a3_final))
 
@@ -6971,7 +7096,6 @@ uniform_df_pangenome_vst_a1 <- data.frame(t(uniform_df_pangenome_vst_a1))
 # add columns with host-associated variables
 uniform_df_pangenome_vst_a1$Age <- 'Age'
 uniform_df_pangenome_vst_a1$BMI <- 'BMI'
-uniform_df_pangenome_vst_a1$LCI <- 'LCI'
 uniform_df_pangenome_vst_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_vst_a1 <- data.frame(t(uniform_df_pangenome_vst_a1))
@@ -7093,13 +7217,16 @@ for (i in random_seeds){
                                                                             'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_vst_a1_sub$species_type_2 <- with(imp_pangenome_vst_a1_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_vst_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                           'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                           'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
+  imp_pangenome_vst_a1_sub <- subset(imp_pangenome_vst_a1_sub, Boruta_predict != "Rejected")
   imp_pangenome_vst_a1_short <-ddply(imp_pangenome_vst_a1_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_vst_a1_short$Seed <- i
@@ -7144,7 +7271,6 @@ uniform_df_pangenome_vst_a2 <- data.frame(t(uniform_df_pangenome_vst_a2))
 # add columns with host-associated variables
 uniform_df_pangenome_vst_a2$Age <- 'Age'
 uniform_df_pangenome_vst_a2$BMI <- 'BMI'
-uniform_df_pangenome_vst_a2$LCI <- 'LCI'
 uniform_df_pangenome_vst_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_vst_a2 <- data.frame(t(uniform_df_pangenome_vst_a2))
@@ -7266,14 +7392,17 @@ for (i in random_seeds){
                                                                             'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_vst_a2_sub$species_type_2 <- with(imp_pangenome_vst_a2_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_vst_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                           'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                           'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_vst_a2_short <-ddply(imp_pangenome_vst_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_vst_a2_sub <- subset(imp_pangenome_vst_a2_sub, Boruta_predict != "Rejected")
+  imp_pangenome_vst_a2_short <- ddply(imp_pangenome_vst_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_vst_a2_short$Seed <- i
   imp_pangenome_vst_a2_short$Threshold <- '25th percentile'
@@ -7317,7 +7446,6 @@ uniform_df_pangenome_vst_a3 <- data.frame(t(uniform_df_pangenome_vst_a3))
 # add columns with host-associated variables
 uniform_df_pangenome_vst_a3$Age <- 'Age'
 uniform_df_pangenome_vst_a3$BMI <- 'BMI'
-uniform_df_pangenome_vst_a3$LCI <- 'LCI'
 uniform_df_pangenome_vst_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_pangenome_vst_a3 <- data.frame(t(uniform_df_pangenome_vst_a3))
@@ -7439,14 +7567,17 @@ for (i in random_seeds){
                                                                             'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_pangenome_vst_a3_sub$species_type_2 <- with(imp_pangenome_vst_a3_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                                  ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                       ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_pangenome_vst_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
                                           'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
                                           'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_pangenome_vst_a3_short <-ddply(imp_pangenome_vst_a3_sub, 'Species_type_2', numcolwise(sum))
+  imp_pangenome_vst_a3_sub <- subset(imp_pangenome_vst_a3_sub, Boruta_predict != "Rejected")
+  imp_pangenome_vst_a3_short <- ddply(imp_pangenome_vst_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_pangenome_vst_a3_short$Seed <- i
   imp_pangenome_vst_a3_short$Threshold <- '35th percentile'
@@ -7458,10 +7589,9 @@ for (i in random_seeds){
 
 # merge all information, random forest, pangenome, VST, 15th abundance percentile, 25th abundance percentile, 35th abundance percentile
 rf.imp.sort.pangenome_vst <- data.frame(rbind(imp.sort.gini_pangenome_vst_a1_final,imp.sort.gini_pangenome_vst_a2_final, imp.sort.gini_pangenome_vst_a3_final))
-rf.imp.sort.pangenome_vst$database <- 'Pangenome'
+rf.imp.sort.pangenome_vst$Database <- 'Pangenome'
 rf.pred.prob.pangenome_vst <- data.frame(rbind(rf_pangenome_vst_a1_pred_final,rf_pangenome_vst_a2_pred_final, rf_pangenome_vst_a3_pred_final))
 rf.error.pangenome_vst <- data.frame(rbind(error_rate_pangenome_vst_a1_final,error_rate_pangenome_vst_a2_final, error_rate_pangenome_vst_a3_final))
-
 
 # merge all information, random forest, pangenome, VST, BCPHC, RLE, 15th abundance, 25th abundance, 35th abundance
 rf.imp.sort.pangenome.all <- data.frame(rbind(rf.imp.sort.pangenome, rf.imp.sort.pangenome_rle, rf.imp.sort.pangenome_vst))
@@ -7505,7 +7635,6 @@ uniform_df_osps_a1 <- data.frame(t(uniform_df_osps_a1))
 # add columns with host-associated variables
 uniform_df_osps_a1$Age <- 'Age'
 uniform_df_osps_a1$BMI <- 'BMI'
-uniform_df_osps_a1$LCI <- 'LCI'
 uniform_df_osps_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_a1 <- data.frame(t(uniform_df_osps_a1))
@@ -7569,10 +7698,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_a1 <- randomForest(response_osps_a1~., data = rf.data_osps_a1, 
-                                             ntree = 80, 
-                                             mtry=sample_val_osps_a1, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                        ntree = 80, 
+                                        mtry=sample_val_osps_a1, 
+                                        importance=TRUE,
+                                        na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_a1 <- erie.classify_osps_a1$err.rate
@@ -7617,24 +7746,27 @@ for (i in random_seeds){
   imp_osps_a1_sub$predictors <- str_replace(imp_osps_a1_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_a1_sub$species_type <- with(imp_osps_a1_sub,
-                                            ifelse(predictors %in% f_rare_species_osps_a1, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_osps_a1, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_osps_a1, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_osps_a1, 
-                                                                        'Core species', 'Host-associated')))))
+                                       ifelse(predictors %in% f_rare_species_osps_a1, 
+                                              'Rare species', 
+                                              ifelse(predictors %in% f_core_species_osps_a1, 
+                                                     'Core species', 
+                                                     ifelse(predictors %in% fluctuating_rare_osps_a1, 
+                                                            'Rare species',
+                                                            ifelse(predictors %in% fluctuating_core_osps_a1, 
+                                                                   'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_a1_sub$species_type_2 <- with(imp_osps_a1_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                       ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                              ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                 'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                 'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_a1_short <-ddply(imp_osps_a1_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_a1_sub <- subset(imp_osps_a1_sub, Boruta_predict != "Rejected")
+  imp_osps_a1_short <- ddply(imp_osps_a1_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_a1_short$Seed <- i
   imp_osps_a1_short$Threshold <- '15th percentile'
@@ -7678,7 +7810,6 @@ uniform_df_osps_a2 <- data.frame(t(uniform_df_osps_a2))
 # add columns with host-associated variables
 uniform_df_osps_a2$Age <- 'Age'
 uniform_df_osps_a2$BMI <- 'BMI'
-uniform_df_osps_a2$LCI <- 'LCI'
 uniform_df_osps_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_a2 <- data.frame(t(uniform_df_osps_a2))
@@ -7742,10 +7873,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_a2 <- randomForest(response_osps_a2~., data = rf.data_osps_a2, 
-                                             ntree = 80, 
-                                             mtry=sample_val_osps_a2, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                        ntree = 80, 
+                                        mtry=sample_val_osps_a2, 
+                                        importance=TRUE,
+                                        na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_a2 <- erie.classify_osps_a2$err.rate
@@ -7790,24 +7921,27 @@ for (i in random_seeds){
   imp_osps_a2_sub$predictors <- str_replace(imp_osps_a2_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_a2_sub$species_type <- with(imp_osps_a2_sub,
-                                            ifelse(predictors %in% f_rare_species_osps_a2, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_osps_a2, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_osps_a2, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_osps_a2, 
-                                                                        'Core species', 'Host-associated')))))
+                                       ifelse(predictors %in% f_rare_species_osps_a2, 
+                                              'Rare species', 
+                                              ifelse(predictors %in% f_core_species_osps_a2, 
+                                                     'Core species', 
+                                                     ifelse(predictors %in% fluctuating_rare_osps_a2, 
+                                                            'Rare species',
+                                                            ifelse(predictors %in% fluctuating_core_osps_a2, 
+                                                                   'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_a2_sub$species_type_2 <- with(imp_osps_a2_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                       ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                              ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                 'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                 'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_a2_short <-ddply(imp_osps_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_a2_sub <- subset(imp_osps_a2_sub, Boruta_predict != "Rejected")
+  imp_osps_a2_short <- ddply(imp_osps_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_a2_short$Seed <- i
   imp_osps_a2_short$Threshold <- '25th percentile'
@@ -7850,7 +7984,6 @@ uniform_df_osps_a3 <- data.frame(t(uniform_df_osps_a3))
 # add columns with host-associated variables
 uniform_df_osps_a3$Age <- 'Age'
 uniform_df_osps_a3$BMI <- 'BMI'
-uniform_df_osps_a3$LCI <- 'LCI'
 uniform_df_osps_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_a3 <- data.frame(t(uniform_df_osps_a3))
@@ -7914,10 +8047,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_a3 <- randomForest(response_osps_a3~., data = rf.data_osps_a3, 
-                                             ntree = 80, 
-                                             mtry=sample_val_osps_a3, 
-                                             importance=TRUE,
-                                             na.action = na.roughfix)
+                                        ntree = 80, 
+                                        mtry=sample_val_osps_a3, 
+                                        importance=TRUE,
+                                        na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_a3 <- erie.classify_osps_a3$err.rate
@@ -7962,24 +8095,27 @@ for (i in random_seeds){
   imp_osps_a3_sub$predictors <- str_replace(imp_osps_a3_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_a3_sub$species_type <- with(imp_osps_a3_sub,
-                                            ifelse(predictors %in% f_rare_species_osps_a3, 
-                                                   'Rare species', 
-                                                   ifelse(predictors %in% f_core_species_osps_a3, 
-                                                          'Core species', 
-                                                          ifelse(predictors %in% fluctuating_rare_osps_a3, 
-                                                                 'Rare species',
-                                                                 ifelse(predictors %in% fluctuating_core_osps_a3, 
-                                                                        'Core species', 'Host-associated')))))
+                                       ifelse(predictors %in% f_rare_species_osps_a3, 
+                                              'Rare species', 
+                                              ifelse(predictors %in% f_core_species_osps_a3, 
+                                                     'Core species', 
+                                                     ifelse(predictors %in% fluctuating_rare_osps_a3, 
+                                                            'Rare species',
+                                                            ifelse(predictors %in% fluctuating_core_osps_a3, 
+                                                                   'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_a3_sub$species_type_2 <- with(imp_osps_a3_sub,
-                                              ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                     ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                         ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                       ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                              ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                      'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                      'Species_type', 'Species_type_2')
+                                 'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                 'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_a3_short <-ddply(imp_osps_a3_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_a3_sub <- subset(imp_osps_a3_sub, Boruta_predict != "Rejected")
+  imp_osps_a3_short <- ddply(imp_osps_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_a3_short$Seed <- i
   imp_osps_a3_short$Threshold <- '35th percentile'
@@ -8030,7 +8166,6 @@ uniform_df_osps_rle_a1 <- data.frame(t(uniform_df_osps_rle_a1))
 # add columns with host-associated variables
 uniform_df_osps_rle_a1$Age <- 'Age'
 uniform_df_osps_rle_a1$BMI <- 'BMI'
-uniform_df_osps_rle_a1$LCI <- 'LCI'
 uniform_df_osps_rle_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_rle_a1 <- data.frame(t(uniform_df_osps_rle_a1))
@@ -8094,10 +8229,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_rle_a1 <- randomForest(response_osps_rle_a1~., data = rf.data_osps_rle_a1, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_rle_a1, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_rle_a1, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_rle_a1 <- erie.classify_osps_rle_a1$err.rate
@@ -8142,24 +8277,27 @@ for (i in random_seeds){
   imp_osps_rle_a1_sub$predictors <- str_replace(imp_osps_rle_a1_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-associated
   imp_osps_rle_a1_sub$species_type <- with(imp_osps_rle_a1_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_rle_a1, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_rle_a1, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_rle_a1, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_rle_a1, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_rle_a1, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_rle_a1, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_rle_a1, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_rle_a1, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_rle_a1_sub$species_type_2 <- with(imp_osps_rle_a1_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_rle_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_rle_a1_short <-ddply(imp_osps_rle_a1_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_rle_a1_sub <- subset(imp_osps_rle_a1_sub, Boruta_predict != "Rejected")
+  imp_osps_rle_a1_short <- ddply(imp_osps_rle_a1_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_rle_a1_short$Seed <- i
   imp_osps_rle_a1_short$Threshold <- '15th percentile'
@@ -8203,7 +8341,6 @@ uniform_df_osps_rle_a2 <- data.frame(t(uniform_df_osps_rle_a2))
 # add columns with host-associated variables
 uniform_df_osps_rle_a2$Age <- 'Age'
 uniform_df_osps_rle_a2$BMI <- 'BMI'
-uniform_df_osps_rle_a2$LCI <- 'LCI'
 uniform_df_osps_rle_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_rle_a2 <- data.frame(t(uniform_df_osps_rle_a2))
@@ -8267,10 +8404,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_rle_a2 <- randomForest(response_osps_rle_a2~., data = rf.data_osps_rle_a2, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_rle_a2, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_rle_a2, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_rle_a2 <- erie.classify_osps_rle_a2$err.rate
@@ -8315,24 +8452,27 @@ for (i in random_seeds){
   imp_osps_rle_a2_sub$predictors <- str_replace(imp_osps_rle_a2_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_rle_a2_sub$species_type <- with(imp_osps_rle_a2_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_rle_a2, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_rle_a2, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_rle_a2, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_rle_a2, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_rle_a2, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_rle_a2, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_rle_a2, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_rle_a2, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_rle_a2_sub$species_type_2 <- with(imp_osps_rle_a2_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_rle_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_rle_a2_short <-ddply(imp_osps_rle_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_rle_a2_sub <- subset(imp_osps_rle_a2_sub, Boruta_predict != "Rejected")
+  imp_osps_rle_a2_short <- ddply(imp_osps_rle_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_rle_a2_short$Seed <- i
   imp_osps_rle_a2_short$Threshold <- '25th percentile'
@@ -8376,7 +8516,6 @@ uniform_df_osps_rle_a3 <- data.frame(t(uniform_df_osps_rle_a3))
 # add columns with host-associated variables
 uniform_df_osps_rle_a3$Age <- 'Age'
 uniform_df_osps_rle_a3$BMI <- 'BMI'
-uniform_df_osps_rle_a3$LCI <- 'LCI'
 uniform_df_osps_rle_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_rle_a3 <- data.frame(t(uniform_df_osps_rle_a3))
@@ -8440,10 +8579,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_rle_a3 <- randomForest(response_osps_rle_a3~., data = rf.data_osps_rle_a3, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_rle_a3, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_rle_a3, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_rle_a3 <- erie.classify_osps_rle_a3$err.rate
@@ -8488,24 +8627,27 @@ for (i in random_seeds){
   imp_osps_rle_a3_sub$predictors <- str_replace(imp_osps_rle_a3_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_rle_a3_sub$species_type <- with(imp_osps_rle_a3_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_rle_a3, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_rle_a3, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_rle_a3, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_rle_a3, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_rle_a3, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_rle_a3, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_rle_a3, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_rle_a3, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_rle_a3_sub$species_type_2 <- with(imp_osps_rle_a3_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_rle_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_rle_a3_short <-ddply(imp_osps_rle_a3_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_rle_a3_sub <- subset(imp_osps_rle_a3_sub, Boruta_predict != "Rejected")
+  imp_osps_rle_a3_short <- ddply(imp_osps_rle_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_rle_a3_short$Seed <- i
   imp_osps_rle_a3_short$Threshold <- '35th percentile'
@@ -8556,7 +8698,6 @@ uniform_df_osps_vst_a1 <- data.frame(t(uniform_df_osps_vst_a1))
 # add columns with host-associated variables
 uniform_df_osps_vst_a1$Age <- 'Age'
 uniform_df_osps_vst_a1$BMI <- 'BMI'
-uniform_df_osps_vst_a1$LCI <- 'LCI'
 uniform_df_osps_vst_a1$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_vst_a1 <- data.frame(t(uniform_df_osps_vst_a1))
@@ -8620,10 +8761,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_vst_a1 <- randomForest(response_osps_vst_a1~., data = rf.data_osps_vst_a1, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_vst_a1, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_vst_a1, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_vst_a1 <- erie.classify_osps_vst_a1$err.rate
@@ -8668,24 +8809,28 @@ for (i in random_seeds){
   imp_osps_vst_a1_sub$predictors <- str_replace(imp_osps_vst_a1_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-associated
   imp_osps_vst_a1_sub$species_type <- with(imp_osps_vst_a1_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_vst_a1, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_vst_a1, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_vst_a1, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_vst_a1, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_vst_a1, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_vst_a1, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_vst_a1, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_vst_a1, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_vst_a1_sub$species_type_2 <- with(imp_osps_vst_a1_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_vst_a1_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_vst_a1_short <-ddply(imp_osps_vst_a1_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_vst_a1_sub <- subset(imp_osps_vst_a1_sub, Boruta_predict != "Rejected")
+  imp_osps_vst_a1_short <- ddply(imp_osps_vst_a1_sub, 'Species_type_2', numcolwise(sum))
+  
   # add meta data
   imp_osps_vst_a1_short$Seed <- i
   imp_osps_vst_a1_short$Threshold <- '15th percentile'
@@ -8729,7 +8874,6 @@ uniform_df_osps_vst_a2 <- data.frame(t(uniform_df_osps_vst_a2))
 # add columns with host-associated variables
 uniform_df_osps_vst_a2$Age <- 'Age'
 uniform_df_osps_vst_a2$BMI <- 'BMI'
-uniform_df_osps_vst_a2$LCI <- 'LCI'
 uniform_df_osps_vst_a2$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_vst_a2 <- data.frame(t(uniform_df_osps_vst_a2))
@@ -8793,10 +8937,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_vst_a2 <- randomForest(response_osps_vst_a2~., data = rf.data_osps_vst_a2, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_vst_a2, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_vst_a2, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_vst_a2 <- erie.classify_osps_vst_a2$err.rate
@@ -8841,24 +8985,27 @@ for (i in random_seeds){
   imp_osps_vst_a2_sub$predictors <- str_replace(imp_osps_vst_a2_sub$predictors, '\\.', ' ') 
   # get information which feature is core/rare species or host-assosciated
   imp_osps_vst_a2_sub$species_type <- with(imp_osps_vst_a2_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_vst_a2, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_vst_a2, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_vst_a2, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_vst_a2, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_vst_a2, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_vst_a2, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_vst_a2, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_vst_a2, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_vst_a2_sub$species_type_2 <- with(imp_osps_vst_a2_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_vst_a2_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_vst_a2_short <-ddply(imp_osps_vst_a2_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_vst_a2_sub <- subset(imp_osps_vst_a2_sub, Boruta_predict != "Rejected")
+  imp_osps_vst_a2_short <- ddply(imp_osps_vst_a2_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_vst_a2_short$Seed <- i
   imp_osps_vst_a2_short$Threshold <- '25th percentile'
@@ -8902,7 +9049,6 @@ uniform_df_osps_vst_a3 <- data.frame(t(uniform_df_osps_vst_a3))
 # add columns with host-associated variables
 uniform_df_osps_vst_a3$Age <- 'Age'
 uniform_df_osps_vst_a3$BMI <- 'BMI'
-uniform_df_osps_vst_a3$LCI <- 'LCI'
 uniform_df_osps_vst_a3$Gender <- 'Gender'
 # transpose data frame back to original space
 uniform_df_osps_vst_a3 <- data.frame(t(uniform_df_osps_vst_a3))
@@ -8966,10 +9112,10 @@ for (i in random_seeds){
   set.seed(i)
   # run random forest
   erie.classify_osps_vst_a3 <- randomForest(response_osps_vst_a3~., data = rf.data_osps_vst_a3, 
-                                                 ntree = 80, 
-                                                 mtry=sample_val_osps_vst_a3, 
-                                                 importance=TRUE,
-                                                 na.action = na.roughfix)
+                                            ntree = 80, 
+                                            mtry=sample_val_osps_vst_a3, 
+                                            importance=TRUE,
+                                            na.action = na.roughfix)
   
   # store error rate locally
   error_rate_osps_vst_a3 <- erie.classify_osps_vst_a3$err.rate
@@ -9012,26 +9158,29 @@ for (i in random_seeds){
   imp_osps_vst_a3$Boruta_predict <- boruta_osps_vst_a3_df$`boruta_osps_vst_a3$finalDecision`
   imp_osps_vst_a3_sub <- subset(imp_osps_vst_a3, MeanDecreaseAccuracy > 0.0)
   imp_osps_vst_a3_sub$predictors <- str_replace(imp_osps_vst_a3_sub$predictors, '\\.', ' ') 
-  # get information which feature is core/rare species or host-assosciated
+  # get information which feature is core/rare species or host-associated
   imp_osps_vst_a3_sub$species_type <- with(imp_osps_vst_a3_sub,
-                                                ifelse(predictors %in% f_rare_species_osps_vst_a3, 
-                                                       'Rare species', 
-                                                       ifelse(predictors %in% f_core_species_osps_vst_a3, 
-                                                              'Core species', 
-                                                              ifelse(predictors %in% fluctuating_rare_osps_vst_a3, 
-                                                                     'Rare species',
-                                                                     ifelse(predictors %in% fluctuating_core_osps_vst_a3, 
-                                                                            'Core species', 'Host-associated')))))
+                                           ifelse(predictors %in% f_rare_species_osps_vst_a3, 
+                                                  'Rare species', 
+                                                  ifelse(predictors %in% f_core_species_osps_vst_a3, 
+                                                         'Core species', 
+                                                         ifelse(predictors %in% fluctuating_rare_osps_vst_a3, 
+                                                                'Rare species',
+                                                                ifelse(predictors %in% fluctuating_core_osps_vst_a3, 
+                                                                       'Core species', 'Host-associated')))))
   # add Boruta information to data frame
   imp_osps_vst_a3_sub$species_type_2 <- with(imp_osps_vst_a3_sub,
-                                                  ifelse(Boruta_predict == 'Rejected', 'Random', 
-                                                         ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))
+                                             ifelse(Boruta_predict == 'Rejected' & species_type == "Rare species", 'Random_rare',
+                                                    ifelse(Boruta_predict == 'Rejected' & species_type == "Core species", 'Random_core',
+                                                           ifelse(Boruta_predict == 'Rejected' & species_type == "Host-associated", 'Random_host',
+                                                                  ifelse(Boruta_predict == 'Tentative', 'Tenative', species_type)))))
   # add column names
   colnames(imp_osps_vst_a3_sub) <- c('Predictors', 'CF', 'Healthy', 'MeanDecreaseAccuracy', 
-                                          'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
-                                          'Species_type', 'Species_type_2')
+                                     'MeanDecreaseGini', 'Boruta_name', 'Boruta_predict', 
+                                     'Species_type', 'Species_type_2')
   # generate short table based on species type, concatenate and sum duplicate rows
-  imp_osps_vst_a3_short <-ddply(imp_osps_vst_a3_sub, 'Species_type_2', numcolwise(sum))
+  imp_osps_vst_a3_sub <- subset(imp_osps_vst_a3_sub, Boruta_predict != "Rejected")
+  imp_osps_vst_a3_short <- ddply(imp_osps_vst_a3_sub, 'Species_type_2', numcolwise(sum))
   # add meta data
   imp_osps_vst_a3_short$Seed <- i
   imp_osps_vst_a3_short$Threshold <- '35th percentile'
@@ -9039,7 +9188,6 @@ for (i in random_seeds){
   # store short table globally
   imp.sort.gini_osps_vst_a3_final <- rbind(imp.sort.gini_osps_vst_a3_final, imp_osps_vst_a3_short)
 }
-
 
 # merge all information, random forest, osps, VST, 15th abundance percentile, 25th abundance percentile, 35th abundance percentile
 rf.imp.sort.osps_vst <- data.frame(rbind(imp.sort.gini_osps_vst_a1_final,imp.sort.gini_osps_vst_a2_final, imp.sort.gini_osps_vst_a3_final))
@@ -9051,102 +9199,98 @@ rf.error.osps_vst <- data.frame(rbind(error_rate_osps_vst_a1_final,error_rate_os
 # merge all information, random forest, osps, VST, BCPHC, RLE, 15th abundance, 25th abundance, 35th abundance
 rf.imp.sort.osps.all <- data.frame(rbind(rf.imp.sort.osps, rf.imp.sort.osps_rle, rf.imp.sort.osps_vst))
 rf.pred.prob.osps.all <- data.frame(rbind(rf.pred.prob.osps, rf.pred.prob.osps_rle, rf.pred.prob.osps_vst))
-rf.error.osps.all <- data.frame(rbind(rf.error.osps,rf.error._rle, rf.error._vst))
+rf.error.osps.all <- data.frame(rbind(rf.error.osps,rf.error.osps_rle, rf.error.osps_vst))
 
 # merge information of pangenome and one strain per species database outputs
-f.imp.sort.all  <- data.frame(rbind(rf.imp.sort.pangenome.all, rf.imp.sort.osps.all))
-# remove all features that were uninformative based on the Boruta algorithm
-rf.imp.sort.all.nr <- subset(rf.imp.sort.all, Species_type_2 != 'Tenative')
+rf.imp.sort.all  <- data.frame(rbind(rf.imp.sort.pangenome.all, rf.imp.sort.osps.all))
+rf.imp.sort.all.nr <- subset(rf.imp.sort.all, Species_type_2 != "Tenative")
+
 # convert classification information to class factor
-rf.imp.sort.all.nr$Species_type_2 <- factor(rf.imp.sort.all.nr$Species_type_2, levels = c('Host-associated', 'Core species', 'Rare species', 'Random'))
+rf.imp.sort.all.nr$Species_type_2 <- factor(rf.imp.sort.all.nr$Species_type_2, levels = c('Host-associated', 'Core species', 'Rare species'))
 # rename normalisation if necessary
 rf.imp.sort.all.nr$Normalisation_2 <- with(rf.imp.sort.all.nr, ifelse(Normalisation == 'BCPHC', 'BCPHC', ifelse(Normalisation == 'RLE', 'RLE', 'VST')))
 
+# generate plot of mean decrease accuracy with statistics
+rf.imp.sort.all.nr$merged_all <- paste(rf.imp.sort.all.nr$Normalisation_2, ";", rf.imp.sort.all.nr$Database, ";", rf.imp.sort.all.nr$Threshold)
+
+# re-name column entries
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, " ;", ";")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "One strain per species", "DB1")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "Pangenome", "DB2")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "percentile", "-PCTL")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "15th -PCTL", "15th-PCTL")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "25th -PCTL", "25th-PCTL")
+rf.imp.sort.all.nr$merged_all <- str_replace_all(rf.imp.sort.all.nr$merged_all, "35th -PCTL", "35th-PCTL")
+rf.imp.sort.all.nr$Species_type_2 <- str_replace_all(rf.imp.sort.all.nr$Species_type_2, "Core species", "Core spp.")
+rf.imp.sort.all.nr$Species_type_2 <- str_replace_all(rf.imp.sort.all.nr$Species_type_2, "Rare species", "Rare spp.")
+
+# generate plot of mean decrease accuracy with statistics
+plot_accuracy <- ggplot(rf.imp.sort.all.nr, aes(x=merged_all, y=MeanDecreaseAccuracy)) +
+  geom_point(aes(colour=Species_type_2),position = position_jitterdodge(dodge.width = 0.5), alpha=0.8, size=0.6) +
+  scale_color_manual(values = c('darkorange', 'black', 'blue')) +
+  theme_bw(base_size = 12) +  xlab(' ') + ylab('Mean Decrease Accuracy') +
+  scale_y_continuous(breaks = c(0,20,40,60,80,100), limits = c(0,110)) +
+  theme(panel.grid = element_blank(), 
+        legend.title = element_blank(), legend.position = "bottom", legend.text = element_text(size=12),
+        axis.title = element_text(size=12), axis.text.x = element_text(size=12), axis.text.y = element_text(size=12)) + 
+  coord_flip() + guides(colour=guide_legend(ncol=3, override.aes = list(size=3, alpha=1)))
+
+
+# generate plot of mean decrease gini with statistics
+plot_gini <- ggplot(rf.imp.sort.all.nr, aes(x=merged_all, y=MeanDecreaseGini)) +
+  geom_point(aes(colour=Species_type_2),position = position_jitterdodge(dodge.width = 0.5), alpha=0.8, size=0.6) +
+  scale_color_manual(values = c('darkorange', 'black', 'blue')) +
+  theme_bw(base_size = 12) +  xlab(' ') + ylab('Mean Decrease Gini') +
+  scale_y_continuous(breaks = c(0,20,40,60,80,100), limits = c(0,110)) +
+  theme(panel.grid = element_blank(), 
+        legend.title = element_blank(), legend.position = "bottom", legend.text = element_text(size=12),
+        axis.title = element_text(size=12), axis.text = element_text(size=12), axis.text.y = element_blank()) + 
+  coord_flip() + guides(colour=guide_legend(ncol=3, override.aes = list(size=2, alpha=1)))
+
+# merge both plots
+plot_rf <- ggarrange(plot_accuracy, plot_gini, common.legend = TRUE, legend='bottom', labels = c('A', 'B'), nrow=1, widths = c(1,0.65), font.label = list(size = 14, color = "black"))
+
+############################################################################################################
 # statistical comparison of mean decrease accuracy with variables
-acc_compare <- compare_means(MeanDecreaseAccuracy ~ Species_type_2, data = rf.imp.sort.all.nr, group.by = 'Normalisation_2')
+acc_compare <- compare_means(MeanDecreaseAccuracy ~ merged_all, data = rf.imp.sort.all.nr, group.by=c("Normalisation_2","Threshold", "Database"))
 # store in table
 acc_compare_table <- data.frame(acc_compare)
-# get the information without grouping by normalisation, this will be added to the plot later on
-acc_compare_random_rare_0 <- subset(acc_compare, group1 == 'Random' & group2 == 'Rare species' | group1 == 'Rare species' & group2 == 'Random')
-acc_compare_random_rare_1 <- subset(acc_compare_random_rare_0, p.signif != 'ns' )
 
 # statistical comparison of mean decrease gini with variables
-gini_compare <- compare_means(MeanDecreaseGini ~ Species_type_2, data = rf.imp.sort.all.nr, group.by = 'Normalisation_2')
+gini_compare <- compare_means(MeanDecreaseGini ~ merged_all, data = rf.imp.sort.all.nr, group.by=c("Normalisation_2","Threshold", "Database"))
 # store in table
 gini_compare_table <- data.frame(gini_compare)
-# get the information without grouping by normalisation, this will be added to the plot later on
-gini_compare_random_rare_0 <- subset(gini_compare, group1 == 'Random' & group2 == 'Rare species' | group1 == 'Rare species' & group2 == 'Random')
-gini_compare_random_rare_1 <- subset(gini_compare_random_rare_0, p.signif != 'ns' )
 
 # merge statistics to one data table, which will be exported later on
 compare_rf_table <- data.frame(rbind(acc_compare_table, gini_compare_table))
+compare_rf_table$p.format <- NULL
+compare_rf_table$p <- NULL
+compare_rf_table$method <- NULL
 
 # get effect size information, mean decrease gini per species type
-rf_table_effsize_gini <- rf.imp.sort.all.nr %>% group_by(Normalisation_2) %>% wilcox_effsize(MeanDecreaseGini~Species_type_2, ci=TRUE)
+rf_table_effsize_gini <- rf.imp.sort.all.nr %>% group_by(Normalisation_2, Threshold, Database) %>% wilcox_effsize(MeanDecreaseGini~merged_all, ci=TRUE)
+
 # get effect size information, mean decrease accuracy per species type
-rf_table_effsize_acc <- rf.imp.sort.all.nr %>% group_by(Normalisation_2) %>% wilcox_effsize(MeanDecreaseAccuracy~Species_type_2, ci=TRUE)
+rf_table_effsize_acc <- rf.imp.sort.all.nr %>% group_by(Normalisation_2,Threshold, Database) %>% wilcox_effsize(MeanDecreaseAccuracy~merged_all, ci=TRUE)
+
 # store in large table
 compare_rf_table_effsize <- data.frame(rbind(rf_table_effsize_gini, rf_table_effsize_acc))
 # round effect size to two decimal places
-compare_rf_table_effsize$effsize <- round(compare_rf_table_effsize$effsize,2)
-
-# generate plot of mean decrease accuracy with statistics
-plot_accuracy <- ggplot(rf.imp.sort.all.nr, aes(x=Species_type_2, y=MeanDecreaseAccuracy)) +
-  geom_boxplot(ties=min, width=0.2, colour="darkred", outlier.alpha = 0, alpha=1) +
-  geom_point(aes(colour=Threshold, shape=database),
-             position = position_jitterdodge(dodge.width = 0.4), alpha=0.4, size=0.5) +
-  stat_summary(fun=median, 
-               geom='point', color='darkred', alpha=1) +
-  scale_color_manual(values = c('black', 'darkslategray4', 'grey')) +
-  facet_wrap(~Normalisation_2) + theme_bw(base_size = 12) + xlab(' ') +
-  ylab('\nMean Decrease Accuracy') +
-  guides(colour=guide_legend(ncol=1, override.aes = list(size=3, alpha=1)), 
-         shape=guide_legend(ncol=1, override.aes = list(size=3, alpha=1))) +
-  scale_y_continuous(breaks = c(0,20,40,60,80,100), limits = c(0,110)) +
-  theme(panel.grid = element_blank(), 
-        strip.background =element_rect(fill='white'),
-        strip.text = element_text(size=12),
-        axis.title = element_text(size=12), legend.title = element_blank(),
-        axis.text.x = element_blank(),
-        legend.text = element_text(size=12)) + 
-  geom_signif(data=acc_compare_random_rare_1, 
-              aes(xmin = group1, xmax = group2, annotations = p.signif, 
-                  y_position = 100, textsize = 3, size = 3), 
-              manual= TRUE, tip_length = c(0.0, 0.0))
-
-# generate plot of mean decrease gini with statistics
-plot_gini <- ggplot(rf.imp.sort.all.nr, aes(x=Species_type_2, y=MeanDecreaseGini)) +
-  geom_boxplot(ties=min, width=0.2, colour="darkred", outlier.alpha = 0, alpha=1) +
-  geom_point(aes(colour=Threshold, shape=database),
-             position = position_jitterdodge(dodge.width = 0.4), alpha=0.4, size=0.5) +
-  stat_summary(fun=median, 
-               geom='point', color='darkred', alpha=1) +
-  scale_color_manual(values = c('black', 'darkslategray4', 'grey')) +
-  facet_wrap(~Normalisation_2) + theme_bw(base_size = 12) + xlab(' ') +
-  ylab('\nMean Decrease Gini') +
-  scale_y_continuous(breaks = c(0,20,40,60,80,100), limits = c(0,110)) +
-  theme(panel.grid = element_blank(), 
-        strip.background =element_rect(fill='white'),
-        strip.text = element_text(size=12),
-        axis.title = element_text(size=12), legend.title = element_blank(),
-        axis.text.x = element_text(angle=45, hjust = 1, vjust = 1, size=12),
-        legend.text = element_text(size=12)) + 
-  guides(colour=guide_legend(ncol=1, override.aes = list(size=3, alpha=1)), 
-         shape=guide_legend(ncol=1, override.aes = list(size=3, alpha=1))) +
-  geom_signif(data=gini_compare_random_rare_1, 
-              aes(xmin = group1, xmax = group2, annotations = p.signif, 
-                  y_position = 100, textsize = 3, size = 3), 
-              manual= TRUE, tip_length = c(0.0, 0.0))
-
-# merge both plots
-plot_rf <- ggarrange(plot_accuracy, plot_gini, common.legend = TRUE, legend='bottom',
-                     labels = c('A', 'B'), nrow=2, heights = c(0.8,1),
-                     font.label = list(size = 14, color = "black"))
+compare_rf_table_effsize$effsize <- round(compare_rf_table_effsize$effsize, 2)
+compare_rf_table_effsize$n2 <- NULL
+compare_rf_table_effsize$n1 <- NULL
+compare_rf_table_effsize$conf.low <- round(compare_rf_table_effsize$conf.low,2)
+# merge data table
+rf_statistcs <- merge(compare_rf_table, compare_rf_table_effsize, by=c(".y.", "group1", "group2", "Threshold", "Database", "Normalisation_2"))
+# re-name variables
+rf_statistcs$group1 <- ifelse(grepl("Core species", rf_statistcs$group1), "Core species", ifelse(grepl("Rare species", rf_statistcs$group1), "Rare species", "Host-associated"))
+rf_statistcs$group2 <- ifelse(grepl("Core species", rf_statistcs$group2), "Core species", ifelse(grepl("Rare species", rf_statistcs$group2), "Rare species", "Host-associated"))
 
 ############################################################################################################
 # get information on class errors
 # bind pangenome and one-strain per species database
 rf.error.all <- data.frame(rbind(rf.error.osps.all, rf.error.pangenome.all))
+rf.error.all <- subset(rf.error.all, OOB_all > 0)
 
 # mean OOB estimate of error (total)
 mean_OOB_all <- mean(rf.error.all$OOB_all)
@@ -9166,42 +9310,17 @@ sd_OOB_H <- sd(rf.error.all$Error_H)
 mean_OOB_H # 0.12
 sd_OOB_H #0.07
 
-
 ############################################################################################################
 # Final output, figures
-tiff(filename="Supplementary_Figure_01.tif",
-     height=2, width=2.7, res=800, units="in")
-line_plots
-dev.off()
-
-tiff(filename="Figure_01.tif",
-     height=8, width=8, res=600, units="in")
-vennDiagramsPlot_pangenome
-dev.off()
-
-tiff(filename="Figure_02.tif",
-     height=11, width=8, res=600, units="in")
-plot_rf
-dev.off()
+ggsave(filename="output_figures/Supplementary_Figure_S1.pdf", line_plots, device="pdf", height=18, width=18, units="cm")
+ggsave(filename="output_figures/Figure_01.pdf", vennDiagramsPlot_pangenome, device="pdf", height=16, width=16, units="cm")
+ggsave(filename="output_figures/Figure_02.pdf", plot_rf, height=15, width=23, units="cm", device="pdf")
 
 ############################################################################################################
 # Final output, tables
-write.table(compare_rf_table, file='rf_statistics.csv', 
-            sep=';', row.names = FALSE,
-            col.names = TRUE)
+write.table(rf_statistcs, file='output_figures/rf_statistics.csv', sep=';', row.names = FALSE, col.names = TRUE)
+write.table(venn_core_rare_stats, file='output_figures/venn_statistics.csv', sep=';', row.names = FALSE, col.names = TRUE)
+write.table(venn_core_rare_stats_effsize, file='output_figures/venn_statistics_effsize.csv', sep=';', row.names = FALSE, col.names = TRUE)
+write.table(background_table, file = 'input_files/taxonomic_data/background_species.csv', row.names = FALSE, col.names = TRUE, sep=';')
 
-write.table(compare_rf_table_effsize, file='rf_statistics_effsize.csv', 
-            sep=';', row.names = FALSE,
-            col.names = TRUE)
-
-write.table(venn_core_care_stats, file='venn_statistics.csv', 
-            sep=';', row.names = FALSE,
-            col.names = TRUE)
-
-write.table(venn_core_rare_stats_effsize, file='venn_statistics_effsize.csv', 
-            sep=';', row.names = FALSE,
-            col.names = TRUE)
-
-write.table(background_table, file = 'background_species.csv', 
-            row.names = FALSE, col.names = TRUE, sep=';')
 ############################################################################################################
